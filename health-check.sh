@@ -1,6 +1,8 @@
 #!/bin/bash --login
 
 ########### vars (see .env file)
+source $SMDHC_SOURCE/.env
+
 datetime=$(date '+%Y%m%d-%H%M%S')
 signature="${datetime}-DM-healthcheck"
 
