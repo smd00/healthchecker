@@ -28,11 +28,15 @@ echo $SMDHC_SOURCE
 
 cp $SMDHC_SOURCE/.env.example $SMDHC_SOURCE/.env # replace with your .env file
 
-source $SMDHC_SOURCE/.env
+# source $SMDHC_SOURCE/.env
+
 # cat .env >> /etc/environment
+
 # set -o allexport
 # source $SMDHC_SOURCE/.env
 # set +o allexport
+
+export $(cat .env | xargs)
 
 # =============================================
 # Grant permissions
