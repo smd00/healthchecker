@@ -16,13 +16,24 @@
 # Update system and install dependencies
 apt-get update && apt-get -y install cron && apt-get -y install nano
 
+echo "============================================="
+echo "setup.sh"
+echo "============================================="
+
 curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/health-check.sh 
 curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/health-cron
 curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/send-email.py
 
 # =============================================
 # Apply environment variables
+
+cp .env.example .env # replace with your .env file
+
+# source .env
+# cat .env >> /etc/environment
+set -o allexport
 source .env
+set +o allexport
 
 # =============================================
 # Grant permissions
