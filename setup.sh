@@ -8,11 +8,6 @@
 # SMDHC_SOURCE=$HOME/smdhc && mkdir -p $SMDHC_SOURCE && cd $SMDHC_SOURCE && curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/setup.sh && chmod +x ./setup.sh && ./setup.sh
 
 # =============================================
-# Set vars
-#SMDHC_SOURCE=$HOME/smdhc (from .env file)
-#SMDHC_OUTPUT_FOLDER_PATH (from .env file)
-
-# =============================================
 # Update system and install dependencies
 apt-get update && apt-get -y install cron && apt-get -y install nano
 
@@ -27,6 +22,9 @@ curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/.env.exampl
 
 # =============================================
 # Apply environment variables
+
+SMDHC_SOURCE=$HOME/smdhc
+echo $SMDHC_SOURCE
 
 cp $SMDHC_SOURCE/.env.example $SMDHC_SOURCE/.env # replace with your .env file
 
