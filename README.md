@@ -2,12 +2,10 @@
 
 ## Run once:
 ```
-cd /home/root/app/health/
 chmod +x ./health-check.sh && sh ./health-check.sh
 ```
 
 ## Install as cron:
 ```
-cd /home/root/app/health/
-chmod +x ./install.sh && sh ./install.sh
+mkdir $HOME/smdhc && cd $HOME/smdhc && curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/setup.sh && sudo chmod +x ./setup.sh && ./setup.sh
 ```
