@@ -1,0 +1,3 @@
+10 21 * * * /bin/bash -l -c '/home/root/app/health/health-check.sh >> /home/root/app/log/health-cron.log'
+# */1 * * * * /bin/bash -l -c '/home/root/app/health/health-check.sh >> /home/root/app/log/health-cron.log'
+# Empty line makes cron valid
