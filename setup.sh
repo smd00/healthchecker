@@ -32,7 +32,7 @@ cp $SMDHC_SOURCE/.env.example $SMDHC_SOURCE/.env # replace with your .env file
 # source .env
 # cat .env >> /etc/environment
 set -o allexport
-source .env
+source $SMDHC_SOURCE/.env
 set +o allexport
 
 # =============================================
