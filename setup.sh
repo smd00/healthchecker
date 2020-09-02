@@ -27,7 +27,7 @@ curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/send-email.
 # =============================================
 # Apply environment variables
 
-cp .env.example .env # replace with your .env file
+cp $SMDHC_SOURCE/.env.example $SMDHC_SOURCE/.env # replace with your .env file
 
 # source .env
 # cat .env >> /etc/environment
