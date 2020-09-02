@@ -71,7 +71,7 @@ try:
     server.sendmail(sender, receiver, message)
     server.quit()
 
-    print('Email sent at {}'.format(now_string))
+    print('Email sent to {} at {}'.format(receiver, now_string))
 except smtplib.SMTPServerDisconnected:
     print('Failed to connect to the server. Wrong user/password?')
 except smtplib.SMTPException as e:
