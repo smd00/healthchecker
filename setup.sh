@@ -5,6 +5,8 @@
 # Website: montoya.com.au
 
 # Usage:
+# SMDHC_SOURCE=$HOME/smdhc && mkdir -p $SMDHC_SOURCE && cd $SMDHC_SOURCE && curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/.env.example && cp $SMDHC_SOURCE/.env.example $SMDHC_SOURCE/.env && export $(cat $SMDHC_SOURCE/.env | xargs)
+
 # SMDHC_SOURCE=$HOME/smdhc && mkdir -p $SMDHC_SOURCE && cd $SMDHC_SOURCE && curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/setup.sh && chmod +x ./setup.sh && ./setup.sh
 
 # =============================================
@@ -36,7 +38,7 @@ cp $SMDHC_SOURCE/.env.example $SMDHC_SOURCE/.env # replace with your .env file
 # source $SMDHC_SOURCE/.env
 # set +o allexport
 
-export $(cat .env | xargs)
+export $(cat $SMDHC_SOURCE/.env | xargs)
 
 # =============================================
 # Grant permissions
