@@ -23,6 +23,7 @@ echo "============================================="
 curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/health-check.sh 
 curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/health-cron
 curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/send-email.py
+curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/.env.example
 
 # =============================================
 # Apply environment variables
