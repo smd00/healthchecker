@@ -7,5 +7,5 @@ chmod +x ./health-check.sh && sh ./health-check.sh
 
 ## Install as cron:
 ```
-mkdir $HOME/smdhc && cd $HOME/smdhc && curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/setup.sh && sudo chmod +x ./setup.sh && ./setup.sh
+SMDHC_SOURCE=$HOME/smdhc && mkdir -p $SMDHC_SOURCE && cd $SMDHC_SOURCE && curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/setup.sh && chmod +x ./setup.sh && ./setup.sh
 ```

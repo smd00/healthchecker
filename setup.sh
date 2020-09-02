@@ -5,7 +5,12 @@
 # Website: montoya.com.au
 
 # Usage:
-# mkdir $HOME/smdhc && cd $HOME/smdhc && curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/setup.sh && sudo chmod +x ./setup.sh && ./setup.sh
+# SMDHC_SOURCE=$HOME/smdhc && mkdir -p $SMDHC_SOURCE && cd $SMDHC_SOURCE && curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/setup.sh && chmod +x ./setup.sh && ./setup.sh
+
+# =============================================
+# Set vars
+#SMDHC_SOURCE=$HOME/smdhc (from .env file)
+#SMDHC_OUTPUT_FOLDER_PATH (from .env file)
 
 # =============================================
 # Update system and install dependencies
@@ -16,23 +21,27 @@ curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/health-cron
 curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/send-email.py
 
 # =============================================
-# Grant permissions
-chmod +x /home/root/app/health/health-check.sh
-chmod +x /home/root/app/health/send-email.py
-
-# =============================================
 # Apply environment variables
 source .env
 
 # =============================================
+# Grant permissions
+chmod +x $SMDHC_SOURCE/health-check.sh
+chmod +x $SMDHC_SOURCE/send-email.py
+
+# =============================================
 # Add cron job
-cp /home/root/app/health/health-cron /etc/cron.d/health-cron
+cp $SMDHC_SOURCE/health-cron /etc/cron.d/health-cron
 chmod 0644 /etc/cron.d/health-cron
 crontab /etc/cron.d/health-cron
-touch /home/root/app/log/health-cron.log
+
+# =============================================
+# Create log folder/file
+mkdir -p $SMDHC_OUTPUT_FOLDER_PATH
+touch $SMDHC_OUTPUT_FOLDER_PATH/health-cron.log
 
 cron
 crontab -l
 
-echo "cron pid: $(pgrep cron)" >> /home/root/app/log/health-cron.log
+echo "cron pid: $(pgrep cron)" >> $SMDHC_OUTPUT_FOLDER_PATH/health-cron.log
 # printenv | grep -v "no_proxy" >> /etc/environment

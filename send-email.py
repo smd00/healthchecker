@@ -31,7 +31,7 @@ Email content vars
 '''
 now = datetime.now()
 now_string = now.strftime('%d/%m/%Y %H:%M:%S')
-service = os.environ.get('SMDHC_APPLICATION_NAME', '')
+service = os.environ.get('SMDHC_CLIENT_NAME', '')
 subject = "Health Check: " + service
 
 import socket
