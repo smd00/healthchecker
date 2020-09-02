@@ -15,8 +15,7 @@ echo "============================================="
 echo "setup.sh"
 echo "============================================="
 
-pwd 
-
+echo "> pwd: " && pwd 
 curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/health-check.sh 
 curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/health-cron
 curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/send-email.py
@@ -25,17 +24,14 @@ curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/.env.exampl
 # =============================================
 # Apply environment variables
 
-ls
-
-echo $SMDHC_SOURCE
 SMDHC_SOURCE=$HOME/smdhc
-echo $SMDHC_SOURCE
+echo "> SMDHC_SOURCE: " $SMDHC_SOURCE
 
 cp $SMDHC_SOURCE/.env.example $SMDHC_SOURCE/.env # replace with your .env file
+echo "> ls: " && ls -lah
 
 source $SMDHC_SOURCE/.env
-
-echo $SMDHC_OUTPUT_FOLDER_PATH
+echo "> SMDHC_OUTPUT_FOLDER_PATH: " $SMDHC_OUTPUT_FOLDER_PATH
 
 # cat .env >> /etc/environment
 
