@@ -40,7 +40,7 @@ hostname = socket.gethostname()
 '''
 Email vars
 '''
-port = 25
+port = os.environ.get('SMDHC_MAIL_PORT', '')
 smtp_server = os.environ.get('SMDHC_MAIL_HOST', '')
 login = os.environ.get('SMDHC_MAIL_USER', '')
 password = os.environ.get('SMDHC_MAIL_PWD', '')
@@ -65,7 +65,8 @@ Log: {}
 Send email
 '''
 try:
-    server = smtplib.SMTP(smtp_server, port)
+    server = smtplib.SMTP_SSL(smtp_server, port)
+    # server = smtplib.SMTP(smtp_server, port)
     server.login(login, password)
     server.sendmail(sender, receiver, message)
     server.quit()
