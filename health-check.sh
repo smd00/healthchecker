@@ -32,7 +32,7 @@ cat ${healthchecks_destination_path}
 
 ########### archive log and empty file
 tar --exclude=${archive_destination_path} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH}
-: > ${SMDHC_CLIENT_LOG_FILE_PATH}
+# : > ${SMDHC_CLIENT_LOG_FILE_PATH}
 
 ########### copy log to S3 (need to configure IAM role first)
 # aws s3 ls
