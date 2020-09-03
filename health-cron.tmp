@@ -1,3 +1,3 @@
 # 10 21 * * * /bin/bash -l -c 'SMDHC_SOURCE=%SMDHC_SOURCE% && $SMDHC_SOURCE/health-check.sh >> %LOG%'
-*/1 * * * * /bin/bash -l -c 'SMDHC_SOURCE=%SMDHC_SOURCE% && $SMDHC_SOURCE/health-check.sh >> %LOG%'
+*/1 * * * * /bin/bash -l -c 'SMDHC_SOURCE=%SMDHC_SOURCE% && $SMDHC_SOURCE/health-check.sh $SMDHC_SOURCE >> %LOG%'
 # Empty line makes cron valid
