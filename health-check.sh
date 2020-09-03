@@ -1,6 +1,8 @@
 #!/bin/bash --login
 
 ########### vars (see .env file)
+echo ""
+echo "############################################" 
 SMDHC_SOURCE=$1
 echo "> SMDHC_SOURCE: " ${SMDHC_SOURCE}
 source $SMDHC_SOURCE/.env

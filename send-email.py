@@ -61,6 +61,8 @@ Log: {}
 
 {}""".format(subject, receiver, sender, now_string, hostname, logFilePath, logFileRead)
 
+print(message)
+
 '''
 Send email
 '''
