@@ -8,23 +8,6 @@ import os
 
 # from dotenv import load_dotenv
 # load_dotenv(dotenv_path='.env')
-smdhc_mail_host = os.environ.get('SMTP_ADDRESS', '')
-smdhc_mail_port = os.environ.get('SMTP_PORT', '')
-smdhc_mail_user = os.environ.get('SMTP_USERNAME', '')
-smdhc_mail_pwd = os.environ.get('SMTP_PASSWORD', '')
-smdhc_mail_sender = os.environ.get('SYSTEM_MAIL_FROM', '')
-smdhc_mail_receiver = os.environ.get('SYSTEM_MAIL_TO', '')
-
-# SMDHC_SOURCE_SEND_EMAIL_SCRIPT = os.environ.get('SMDHC_SOURCE', '') + '/send-email.py'
-
-# SMDHC_OUTPUT_FOLDER_PATH = '/home/root/app/log/smdhc'
-# SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH = os.environ.get('SMDHC_OUTPUT_FOLDER_PATH', SMDHC_OUTPUT_FOLDER_PATH) + '/healthchecks'
-# SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH = os.environ.get('SMDHC_OUTPUT_FOLDER_PATH', SMDHC_OUTPUT_FOLDER_PATH) + '/archive'
-
-# SMDHC_CLIENT_LOG_FOLDER_PATH = '/home/root/app/log'
-# SMDHC_CLIENT_LOG_FILE_PATH = os.environ.get('SMDHC_CLIENT_LOG_FOLDER_PATH', SMDHC_CLIENT_LOG_FOLDER_PATH) + '/production.log'
-
-# SMDHC_CLIENT_NAME = 'Rails'
 
 '''
 Load args
@@ -57,13 +40,13 @@ subject = "Health Check: " + service
 '''
 Email vars
 '''
-smtp_server = os.environ.get('SMDHC_MAIL_HOST', smdhc_mail_host)
-port = os.environ.get('SMDHC_MAIL_PORT', smdhc_mail_port)
-login = os.environ.get('SMDHC_MAIL_USER', smdhc_mail_user)
-password = os.environ.get('SMDHC_MAIL_PWD', smdhc_mail_pwd)
+smtp_server = os.environ.get('SMDHC_MAIL_HOST', '')
+port = os.environ.get('SMDHC_MAIL_PORT', '')
+login = os.environ.get('SMDHC_MAIL_USER', '')
+password = os.environ.get('SMDHC_MAIL_PWD', '')
 
-sender = os.environ.get('SMDHC_MAIL_SENDER', smdhc_mail_sender)
-receiver = os.environ.get('SMDHC_MAIL_RECEIVER', smdhc_mail_receiver)
+sender = os.environ.get('SMDHC_MAIL_SENDER', '')
+receiver = os.environ.get('SMDHC_MAIL_RECEIVER', '')
 
 message = """\
 Subject: {}
