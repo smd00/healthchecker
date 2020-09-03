@@ -6,6 +6,7 @@
 
 # Usage:
 # git clone https://github.com/smd00/healthchecker.git && mv -f healthchecker ${HOME}/smdhc && cd ${HOME}/smdhc 
+# replace .env.tmp vars
 # chmod +x ./setup.sh && ./setup.sh
 
 # =============================================
@@ -23,7 +24,7 @@ echo "> pwd: " && pwd
 SMDHC_SOURCE=${HOME}/smdhc
 echo "> SMDHC_SOURCE: " ${SMDHC_SOURCE}
 
-cp ${SMDHC_SOURCE}/.env.example ${SMDHC_SOURCE}/.env # replace with your .env file
+cp ${SMDHC_SOURCE}/.env.tmp ${SMDHC_SOURCE}/.env # replace with your .env file
 echo "> ls: " && ls -lah
 
 source ${SMDHC_SOURCE}/.env
