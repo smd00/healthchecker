@@ -10,11 +10,7 @@ signature="${datetime}-DM-healthcheck"
 healthchecks_destination_path=${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH}/${datetime}.log
 archive_destination_path=${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}/${datetime}-production-log.tar.gz
 
-########### create folders and files
-mkdir -p ${SMDHC_OUTPUT_FOLDER_PATH}
-mkdir -p ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH}
-mkdir -p ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}
-
+########### create files
 touch ${healthchecks_destination_path}
 touch ${archive_destination_path}
 

@@ -5,7 +5,7 @@
 # Website: montoya.com.au
 
 # Usage:
-# SMDHC_SOURCE=$HOME/smdhc && mkdir -p $SMDHC_SOURCE && cd $SMDHC_SOURCE && curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/setup.sh && chmod +x ./setup.sh && ./setup.sh
+# git clone https://github.com/smd00/healthchecker.git && mv healthchecker smdhc && mv smdhc ${HOME} && cd ${HOME}/smdhc && chmod +x ./setup.sh && ./setup.sh
 
 # =============================================
 # Update system and install dependencies
@@ -16,49 +16,52 @@ echo "setup.sh"
 echo "============================================="
 
 echo "> pwd: " && pwd 
-curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/health-check.sh 
-curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/health-cron
-curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/send-email.py
-curl -O https://raw.githubusercontent.com/smd00/healthchecker/master/.env.example
-
 # =============================================
 # Apply environment variables
 
-SMDHC_SOURCE=$HOME/smdhc
-echo "> SMDHC_SOURCE: " $SMDHC_SOURCE
+SMDHC_SOURCE=${HOME}/smdhc
+echo "> SMDHC_SOURCE: " ${SMDHC_SOURCE}
 
-cp $SMDHC_SOURCE/.env.example $SMDHC_SOURCE/.env # replace with your .env file
+cp ${SMDHC_SOURCE}/.env.example ${SMDHC_SOURCE}/.env # replace with your .env file
 echo "> ls: " && ls -lah
 
-source $SMDHC_SOURCE/.env
-echo "> SMDHC_OUTPUT_FOLDER_PATH: " $SMDHC_OUTPUT_FOLDER_PATH
+source ${SMDHC_SOURCE}/.env
+echo "> SMDHC_OUTPUT_FOLDER_PATH: " ${SMDHC_OUTPUT_FOLDER_PATH}
 
 # cat .env >> /etc/environment
 
 # set -o allexport
-# source $SMDHC_SOURCE/.env
+# source ${SMDHC_SOURCE}/.env
 # set +o allexport
 
-# export $(cat $SMDHC_SOURCE/.env | xargs)
+# export $(cat ${SMDHC_SOURCE}/.env | xargs)
+
+script_file_path=${SMDHC_SOURCE}/health-check.sh
+log_file_path=${SMDHC_OUTPUT_FOLDER_PATH}/health-cron.log
 
 # =============================================
 # Grant permissions
-chmod +x $SMDHC_SOURCE/health-check.sh
-chmod +x $SMDHC_SOURCE/send-email.py
+chmod +x $script_file_path
+chmod +x ${SMDHC_SOURCE}/send-email.py
+
+# =============================================
+# Create output folders/files
+mkdir -p ${SMDHC_OUTPUT_FOLDER_PATH}
+mkdir -p ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH}
+mkdir -p ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}
+
+touch $log_file_path
 
 # =============================================
 # Add cron job
-cp $SMDHC_SOURCE/health-cron /etc/cron.d/health-cron
+sed -e "s;%SCRIPT%;$script_file_path;g" -e "s;%LOG%;$log_file_path;g" ${SMDHC_SOURCE}/health-cron.tmp > ${SMDHC_SOURCE}/health-cron
+
+cp ${SMDHC_SOURCE}/health-cron /etc/cron.d/health-cron
 chmod 0644 /etc/cron.d/health-cron
 crontab /etc/cron.d/health-cron
-
-# =============================================
-# Create log folder/file
-mkdir -p $SMDHC_OUTPUT_FOLDER_PATH
-touch $SMDHC_OUTPUT_FOLDER_PATH/health-cron.log
 
 cron
 crontab -l
 
-echo "cron pid: $(pgrep cron)" >> $SMDHC_OUTPUT_FOLDER_PATH/health-cron.log
+echo "cron pid: $(pgrep cron)" >> $log_file_path
 # printenv | grep -v "no_proxy" >> /etc/environment
