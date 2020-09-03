@@ -2,6 +2,7 @@
 
 ########### vars (see .env file)
 source $SMDHC_SOURCE/.env
+echo "> SMDHC_OUTPUT_FOLDER_PATH: " $SMDHC_OUTPUT_FOLDER_PATH
 
 datetime=$(date '+%Y%m%d-%H%M%S')
 signature="${datetime}-DM-healthcheck"
