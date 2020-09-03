@@ -5,7 +5,8 @@
 # Website: montoya.com.au
 
 # Usage:
-# git clone https://github.com/smd00/healthchecker.git && mv -f healthchecker ${HOME}/smdhc && cd ${HOME}/smdhc && chmod +x ./setup.sh && ./setup.sh
+# git clone https://github.com/smd00/healthchecker.git && mv -f healthchecker ${HOME}/smdhc && cd ${HOME}/smdhc 
+# chmod +x ./setup.sh && ./setup.sh
 
 # =============================================
 # Update system and install dependencies

@@ -63,14 +63,17 @@ Log: {}
 
 print("smtp_server: " + smtp_server)
 print("port: " + port)
+print("login: " + login)
+print("password: " + password)
 print("message: " + message)
 
 '''
 Send email
 '''
 try:
-    server = smtplib.SMTP_SSL(smtp_server, port)
-    # server = smtplib.SMTP(smtp_server, port)
+    #server = smtplib.SMTP_SSL(smtp_server, port)
+    server = smtplib.SMTP(smtp_server, port)
+    server.starttls()
     server.login(login, password)
     server.sendmail(sender, receiver, message)
     server.quit()
