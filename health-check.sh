@@ -6,7 +6,7 @@ echo "############################################"
 SMDHC_SOURCE=$1
 echo "> SMDHC_SOURCE: " ${SMDHC_SOURCE}
 source $SMDHC_SOURCE/.env
-echo "> SMDHC_OUTPUT_FOLDER_PATH: " $SMDHC_OUTPUT_FOLDER_PATH
+# echo "> SMDHC_OUTPUT_FOLDER_PATH: " $SMDHC_OUTPUT_FOLDER_PATH
 
 datetime=$(date '+%Y%m%d-%H%M%S')
 signature="${datetime}-DM-healthcheck"

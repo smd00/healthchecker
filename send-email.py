@@ -61,11 +61,9 @@ Log: {}
 
 {}""".format(subject, receiver, sender, now_string, hostname, logFilePath, logFileRead)
 
-print("smtp_server: " + smtp_server)
-print("port: " + port)
-print("login: " + login)
-print("password: " + password)
-print("message: " + message)
+# print("smtp_server: " + smtp_server)
+# print("port: " + port)
+# print("message: " + message)
 
 '''
 Send email
