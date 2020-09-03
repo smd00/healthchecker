@@ -1,7 +1,7 @@
 #!/bin/bash --login
 
 ########### vars (see .env file)
-SMDHC_SOURCE=${HOME}/smdhc
+echo "> SMDHC_SOURCE: " ${SMDHC_SOURCE}
 source $SMDHC_SOURCE/.env
 echo "> SMDHC_OUTPUT_FOLDER_PATH: " $SMDHC_OUTPUT_FOLDER_PATH
 

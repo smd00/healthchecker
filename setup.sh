@@ -5,7 +5,7 @@
 # Website: montoya.com.au
 
 # Usage:
-# git clone https://github.com/smd00/healthchecker.git && mv healthchecker smdhc && mv smdhc ${HOME} && cd ${HOME}/smdhc && chmod +x ./setup.sh && ./setup.sh
+# git clone https://github.com/smd00/healthchecker.git && mv -f healthchecker ${HOME}/smdhc && cd ${HOME}/smdhc && chmod +x ./setup.sh && ./setup.sh
 
 # =============================================
 # Update system and install dependencies
@@ -36,12 +36,11 @@ echo "> SMDHC_OUTPUT_FOLDER_PATH: " ${SMDHC_OUTPUT_FOLDER_PATH}
 
 # export $(cat ${SMDHC_SOURCE}/.env | xargs)
 
-script_file_path=${SMDHC_SOURCE}/health-check.sh
 log_file_path=${SMDHC_OUTPUT_FOLDER_PATH}/health-cron.log
 
 # =============================================
 # Grant permissions
-chmod +x $script_file_path
+chmod +x ${SMDHC_SOURCE}/health-check.sh
 chmod +x ${SMDHC_SOURCE}/send-email.py
 
 # =============================================
@@ -54,7 +53,7 @@ touch $log_file_path
 
 # =============================================
 # Add cron job
-sed -e "s;%SCRIPT%;$script_file_path;g" -e "s;%LOG%;$log_file_path;g" ${SMDHC_SOURCE}/health-cron.tmp > ${SMDHC_SOURCE}/health-cron
+sed -e "s;%SMDHC_SOURCE%;$SMDHC_SOURCE;g" -e "s;%LOG%;$log_file_path;g" ${SMDHC_SOURCE}/health-cron.tmp > ${SMDHC_SOURCE}/health-cron
 
 cp ${SMDHC_SOURCE}/health-cron /etc/cron.d/health-cron
 chmod 0644 /etc/cron.d/health-cron
