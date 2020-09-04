@@ -51,8 +51,8 @@ touch $log_file_path
 
 # =============================================
 # Grant permissions
-chmod +x ${SMDHC_SOURCE}/health-check.sh
-chmod +x ${SMDHC_SOURCE}/send-email.py
+chmod a+rwx ${SMDHC_SOURCE}/health-check.sh
+chmod a+rwx ${SMDHC_SOURCE}/send-email.py
  
 chmod a+rwx ${SMDHC_OUTPUT_FOLDER_PATH}
 chmod a+rwx ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH}
