@@ -5,9 +5,9 @@
 # Website: montoya.com.au
 
 # Usage:
-# git clone https://github.com/smd00/healthchecker.git && mv -f healthchecker ${HOME}/smdhc && cd ${HOME}/smdhc 
-# replace .env.tmp vars
-# chmod +x ./setup.sh && ./setup.sh
+# git clone https://github.com/smd00/healthchecker.git && mv -f healthchecker ${HOME}/smdhc && cd ${HOME}/smdhc && chmod +x ./setup.sh
+# customise .env.tmp and health-cron.tmp
+# sh ./setup.sh
 
 # =============================================
 # Update system and install dependencies
@@ -39,24 +39,23 @@ cat .env >> /etc/environment
 
 # export $(cat ${SMDHC_SOURCE}/.env | xargs)
 
-log_file_path=${SMDHC_OUTPUT_FOLDER_PATH}/health-cron.log
-
 # =============================================
-# Create output folders/files
+# Create output folders/files 
+# Grant permissions
 mkdir -p ${SMDHC_OUTPUT_FOLDER_PATH}
-mkdir -p ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH}
-mkdir -p ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}
+chmod a+rwx ${SMDHC_OUTPUT_FOLDER_PATH}
 
+mkdir -p ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH}
+chmod a+rwx ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH}
+
+mkdir -p ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}
+chmod a+rwx ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}
+
+log_file_path=${SMDHC_OUTPUT_FOLDER_PATH}/health-cron.log
 touch $log_file_path
 
-# =============================================
-# Grant permissions
 chmod a+rwx ${SMDHC_SOURCE}/health-check.sh
 chmod a+rwx ${SMDHC_SOURCE}/send-email.py
- 
-chmod a+rwx ${SMDHC_OUTPUT_FOLDER_PATH}
-chmod a+rwx ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH}
-chmod a+rwx ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}
 
 # =============================================
 # Add cron job
