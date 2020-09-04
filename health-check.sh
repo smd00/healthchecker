@@ -29,6 +29,19 @@ echo "############################################" >> ${healthchecks_destinatio
 echo ${signature} >> ${healthchecks_destination_path}
 echo "" >> ${healthchecks_destination_path}
 df -h . ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
+
+if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
+    echo "" >> ${healthchecks_destination_path}
+    echo "Block Number: " >> ${healthchecks_destination_path}
+    ETH_URL=127.0.0.1:5011 && echo $((`curl --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST $ETH_URL | grep -oh "\w*0x\w*"`)) >> ${healthchecks_destination_path}
+    echo "" >> ${healthchecks_destination_path}
+elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
+    echo "" >> ${healthchecks_destination_path}
+    echo "Block Number: " >> ${healthchecks_destination_path}
+    bitcoin-cli getblockcount >> ${healthchecks_destination_path}
+    echo "" >> ${healthchecks_destination_path}
+fi
+
 echo "" >> ${healthchecks_destination_path}
 tail ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}
 cat ${healthchecks_destination_path}
