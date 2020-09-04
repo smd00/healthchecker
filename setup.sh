@@ -64,5 +64,7 @@ crontab /etc/cron.d/health-cron
 cron
 crontab -l
 
-echo "cron pid: $(pgrep cron)" >> $log_file_path
+datetime=$(date '+%Y%m%d-%H%M%S')
+signature="${datetime}-SMDHC-healthcheck"
+echo "${signature} cron pid: $(pgrep cron)" >> $log_file_path
 # printenv | grep -v "no_proxy" >> /etc/environment
