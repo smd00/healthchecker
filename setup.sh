@@ -28,9 +28,10 @@ cp ${SMDHC_SOURCE}/.env.tmp ${SMDHC_SOURCE}/.env # replace with your .env file
 echo "> ls: " && ls -lah
 
 source ${SMDHC_SOURCE}/.env && source .env
+cat ${SMDHC_SOURCE}/.env >> /etc/environment && cat .env >> /etc/environment
+
 echo "> SMDHC_OUTPUT_FOLDER_PATH: " ${SMDHC_OUTPUT_FOLDER_PATH}
 
-cat .env >> /etc/environment
 # cat ${SMDHC_SOURCE}/.env >> /etc/environment
 
 # set -o allexport
