@@ -5,14 +5,15 @@ echo ""
 echo "############################################" 
 SMDHC_SOURCE=$1
 echo "> SMDHC_SOURCE: " ${SMDHC_SOURCE}
-source $SMDHC_SOURCE/.env
+source ${SMDHC_SOURCE}/.env
+export $(cat ${SMDHC_SOURCE}/.env | xargs)
 # echo "> SMDHC_OUTPUT_FOLDER_PATH: " $SMDHC_OUTPUT_FOLDER_PATH
 
 datetime=$(date '+%Y%m%d-%H%M%S')
 signature="${datetime}-SMDHC-healthcheck"
 
 healthchecks_destination_path=${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH}/${datetime}.log
-archive_destination_path=${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}/${datetime}-production-log.tar.gz
+archive_destination_path=${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}/${datetime}-logs.tar.gz
 
 ########### create files
 touch ${healthchecks_destination_path}
