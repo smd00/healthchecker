@@ -29,6 +29,7 @@ echo "> ls: " && ls -lah
 
 source ${SMDHC_SOURCE}/.env && source .env
 cat ${SMDHC_SOURCE}/.env >> /etc/environment && cat .env >> /etc/environment
+export $(cat ${SMDHC_SOURCE}/.env | xargs) && export $(cat .env | xargs)
 
 echo "> SMDHC_OUTPUT_FOLDER_PATH: " ${SMDHC_OUTPUT_FOLDER_PATH}
 
