@@ -5,8 +5,8 @@ echo ""
 echo "############################################" 
 SMDHC_SOURCE=$1
 echo "> SMDHC_SOURCE: " ${SMDHC_SOURCE}
-source ${SMDHC_SOURCE}/.env
-export $(cat ${SMDHC_SOURCE}/.env | xargs)
+source ${SMDHC_SOURCE}/.env && source .env
+export $(cat ${SMDHC_SOURCE}/.env | xargs) && export $(cat .env | xargs)
 # echo "> SMDHC_OUTPUT_FOLDER_PATH: " $SMDHC_OUTPUT_FOLDER_PATH
 
 datetime=$(date '+%Y%m%d-%H%M%S')
