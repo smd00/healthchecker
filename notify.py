@@ -61,7 +61,7 @@ Log: {}
 
 {}""".format(subject, receiver, sender, now_string, hostname, logFilePath, logFileRead)
 
-# print("smtp_server: " + smtp_server)
+print("smtp_server: " + smtp_server)
 # print("port: " + port)
 # print("message: " + message)
 

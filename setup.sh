@@ -6,7 +6,7 @@
 
 # Usage:
 # git clone https://github.com/smd00/healthchecker.git && mv -f healthchecker ${HOME}/smdhc && cd ${HOME}/smdhc && chmod +x ./setup.sh
-# customise .env.tmp and health-cron.tmp
+# customise .env.tmp and cron.tmp
 # sh ./setup.sh
 
 # =============================================
@@ -53,19 +53,19 @@ chmod a+rwx ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH}
 mkdir -p ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}
 chmod a+rwx ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}
 
-log_file_path=${SMDHC_OUTPUT_FOLDER_PATH}/health-cron.log
+log_file_path=${SMDHC_OUTPUT_FOLDER_PATH}/cron.log
 touch $log_file_path
 
-chmod a+rwx ${SMDHC_SOURCE}/health-check.sh
-chmod a+rwx ${SMDHC_SOURCE}/send-email.py
+chmod a+rwx ${SMDHC_SOURCE}/check.sh
+chmod a+rwx ${SMDHC_SOURCE}/notify.py
 
 # =============================================
 # Add cron job
-sed -e "s;%SMDHC_SOURCE%;$SMDHC_SOURCE;g" -e "s;%LOG%;$log_file_path;g" ${SMDHC_SOURCE}/health-cron.tmp > ${SMDHC_SOURCE}/health-cron
+sed -e "s;%SMDHC_SOURCE%;$SMDHC_SOURCE;g" -e "s;%LOG%;$log_file_path;g" ${SMDHC_SOURCE}/cron.tmp > ${SMDHC_SOURCE}/cron
 
-cp ${SMDHC_SOURCE}/health-cron /etc/cron.d/health-cron
-chmod 0644 /etc/cron.d/health-cron
-crontab /etc/cron.d/health-cron
+cp ${SMDHC_SOURCE}/cron /etc/cron.d/cron
+chmod 0644 /etc/cron.d/cron
+crontab /etc/cron.d/cron
 
 cron
 crontab -l
