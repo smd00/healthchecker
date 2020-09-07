@@ -2,7 +2,8 @@
 
 ## Run once:
 ```
-chmod +x ./check.sh && sh ./check.sh .
+chmod +x ./check.sh 
+sh ./check.sh .
 ```
 
 ## Install as cron with custom env vars and cron settings
