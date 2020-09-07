@@ -80,7 +80,9 @@ elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     
     TAR_ARGS="--exclude=${SMDHC_OUTPUT_FOLDER_PATH} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH}"
 
-    EMPTY_LOG=""
+    EMPTY_LOG="echo 'NA'"
+    echo "find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output -exec sh -c '>"{}"' \;" >> ${healthchecks_destination_path}
+    echo "find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \;" >> ${healthchecks_destination_path}
     find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output -exec sh -c '>"{}"' \;
     find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \;
 
@@ -93,7 +95,6 @@ echo "" >> ${healthchecks_destination_path}
 echo "> top -b -n 1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
 top -b -n 1 >> ${healthchecks_destination_path}
 
-echo "> cat ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
 cat ${healthchecks_destination_path}
 
 ########### archive log and empty file
