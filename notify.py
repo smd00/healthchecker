@@ -37,7 +37,8 @@ hostname = socket.gethostname()
 now = datetime.now()
 now_string = now.strftime('%d/%m/%Y %H:%M:%S')
 service = os.environ.get('SMDHC_CLIENT_NAME', hostname)
-subject = "Health Check: " + service
+env = os.environ.get('SMDHC_CLIENT_ENV', '')
+subject = "Health Check: " + env + " " + service
 
 '''
 Email vars
