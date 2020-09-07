@@ -54,5 +54,5 @@ tar --exclude=${archive_destination_path} -zcvf ${archive_destination_path} ${SM
 # aws s3 ls
 
 ########### send health report email
-echo "> python" ${SMDHC_SOURCE_SEND_EMAIL_SCRIPT} + " " + ${healthchecks_destination_path}
-python ${SMDHC_SOURCE_SEND_EMAIL_SCRIPT} ${healthchecks_destination_path}
+echo "> python" ${SMDHC_SOURCE}/${SMDHC_SOURCE_SEND_EMAIL_SCRIPT} ${healthchecks_destination_path}
+python ${SMDHC_SOURCE}/${SMDHC_SOURCE_SEND_EMAIL_SCRIPT} ${healthchecks_destination_path}

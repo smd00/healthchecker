@@ -26,6 +26,8 @@ logFileRead = logFile.read()
 # import subprocess
 # subprocess.run(["pm2", "ls"])
 
+print("logFilePath: " + logFilePath)
+
 '''
 Email content vars
 '''
