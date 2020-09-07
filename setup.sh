@@ -11,7 +11,7 @@
 
 # =============================================
 # Update system and install dependencies
-apt-get update && apt install python && apt-get -y install cron && apt-get -y install nano
+apt-get update && apt install python -y && apt-get -y install cron && apt-get -y install nano
 
 echo "============================================="
 echo "setup.sh"
