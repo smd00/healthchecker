@@ -28,9 +28,13 @@ cp ${SMDHC_SOURCE}/.env.tmp ${SMDHC_SOURCE}/.env # replace with your .env file
 echo "> ls: " && ls -lah
 
 source ${SMDHC_SOURCE}/.env && source .env
+
 cp /etc/environment /etc/environment.smdhc
-cat ${SMDHC_SOURCE}/.env >> /etc/environment && cat .env >> /etc/environment
-export $(cat ${SMDHC_SOURCE}/.env | xargs) && export $(cat .env | xargs)
+cat ${SMDHC_SOURCE}/.env >> /etc/environment 
+cat .env >> /etc/environment
+
+export $(cat ${SMDHC_SOURCE}/.env | xargs)
+export $(cat .env | xargs)
 
 echo "> SMDHC_OUTPUT_FOLDER_PATH: " ${SMDHC_OUTPUT_FOLDER_PATH}
 
