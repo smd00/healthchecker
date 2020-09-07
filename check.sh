@@ -1,13 +1,15 @@
 #!/bin/bash --login
 
 ########### vars (see .env file)
-echo ""
-echo "############################################" 
+echo "" && echo "############################################" 
 SMDHC_SOURCE=$1
 echo "> SMDHC_SOURCE: " ${SMDHC_SOURCE}
-source ${SMDHC_SOURCE}/.env && source .env
-export $(cat ${SMDHC_SOURCE}/.env | xargs) && export $(cat .env | xargs)
-# echo "> SMDHC_OUTPUT_FOLDER_PATH: " $SMDHC_OUTPUT_FOLDER_PATH
+
+source ${SMDHC_SOURCE}/.env 
+source .env
+
+export $(cat ${SMDHC_SOURCE}/.env | xargs) 
+export $(cat .env | xargs)
 
 datetime=$(date '+%Y%m%d-%H%M%S')
 signature="${datetime}-SMDHC-healthcheck"
@@ -19,20 +21,125 @@ archive_destination_path=${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}/${datetime}-logs.ta
 touch ${healthchecks_destination_path}
 touch ${archive_destination_path}
 
-########### add signature to log files
-# find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output -exec sh -c 'echo healthcheck ${(date)} >> ${0}' {} \;
+########### functions
+compress () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function compress $1"
+
+    echo "> tar $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tar $1 >> ${healthchecks_destination_path}
+} 
+
+empty () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function empty $1"
+
+    echoLsLah $1
+
+    echo "> $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    $1 >> ${healthchecks_destination_path}
+
+    echoLsLah $1
+} 
+
+emptyLogFiles () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function emptyLogFiles $1"
+
+    echoLsLah $1/*.log
+
+    echo "> find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
+
+    echoLsLah $1/*.log
+}
+
+emptyOutputFiles () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function emptyOutputFiles $1"
+
+    echoLsLah $1/*.output
+
+    echo "> find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
+
+    echoLsLah $1/*.output
+}
+
+tailLogFile () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function tailLogFile $1"
+
+    echo "> tail $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tail $1 >> ${healthchecks_destination_path}
+}
+
+tailLogFiles () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function tailLogFiles $1"
+
+    echo "> tail $1/*.log >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tail $1/*.log >> ${healthchecks_destination_path}
+}
+
+tailOutputFiles () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function tailOutputFiles $1"
+
+    echo "> tail $1/*.output >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tail $1/*.output >> ${healthchecks_destination_path}
+}
+
+tailAllFiles () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function tailAllFiles $1"
+
+    echo "> tail $1/* >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tail $1/* >> ${healthchecks_destination_path}
+}
+
+tailSyslog () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function tailSyslog"
+
+    echo "> tail /var/log/syslog >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tail /var/log/syslog >> ${healthchecks_destination_path}
+}
+
+echoLsLah () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function echoLsLah $1"
+
+    echo "ls -lah $1 >> ${healthchecks_destination_path}"
+    ls -lah $1 >> ${healthchecks_destination_path}
+}
+
+echoTop () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> top -b -n 1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    top -b -n 1 >> ${healthchecks_destination_path}
+}
+
+echoDf () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function echoDf $1"
+
+    echo "> df -h . $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    df -h . $1 >> ${healthchecks_destination_path}
+}
+
+echoSignature () {
+    echo "" >> ${healthchecks_destination_path}
+    echo "############################################" >> ${healthchecks_destination_path}
+    echo ${signature} >> ${healthchecks_destination_path}
+}
 
 ########### print info to healthchecks file
-echo "" >> ${healthchecks_destination_path}
-echo "############################################" >> ${healthchecks_destination_path}
-echo ${signature} >> ${healthchecks_destination_path}
-echo "" >> ${healthchecks_destination_path}
-echo "> df -h . ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-df -h . ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
+echoSignature
 
-echo "" >> ${healthchecks_destination_path}
-echo "> tail ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-tail ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}
+echoDf ${SMDHC_CLIENT_LOG_FOLDER_PATH}
+
+tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH}
 
 TAR_ARGS="--exclude=${archive_destination_path} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH}"
 EMPTY_ARGS=": > ${SMDHC_CLIENT_LOG_FILE_PATH}"
@@ -104,96 +211,9 @@ elif [ "${SMDHC_CLIENT_NAME}" = "RAILS" ]; then
     emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
 fi
 
-echo "" >> ${healthchecks_destination_path}
-echo "> top -b -n 1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-top -b -n 1 >> ${healthchecks_destination_path}
+echoTop
 
 cat ${healthchecks_destination_path}
-
-########### archive log and empty file
-function compress {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function compress $1"
-
-    echo "> tar $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    tar $1 >> ${healthchecks_destination_path}
-} 
-
-function empty $1{
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function empty $1"
-
-    echoLsLah $1
-
-    echo "> $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    $1 >> ${healthchecks_destination_path}
-
-    echoLsLah $1
-} 
-
-function emptyLogFiles {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function emptyLogFiles $1"
-
-    echoLsLah $1/*.log
-
-    echo "> find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
-
-    echoLsLah $1/*.log
-}
-
-function emptyOutputFiles {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function emptyOutputFiles $1"
-
-    echoLsLah $1/*.output
-
-    echo "> find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
-
-    echoLsLah $1/*.output
-}
-
-function tailLogFiles {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function tailLogFiles $1"
-
-    echo "> tail $1/*.log >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    tail $1/*.log >> ${healthchecks_destination_path}
-}
-
-function tailOutputFiles {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function tailOutputFiles $1"
-
-    echo "> tail $1/*.output >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    tail $1/*.output >> ${healthchecks_destination_path}
-}
-
-function tailAllFiles {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function tailAllFiles $1"
-
-    echo "> tail $1/* >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    tail $1/* >> ${healthchecks_destination_path}
-}
-
-function tailSyslog {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function tailSyslog"
-
-    echo "> tail /var/log/syslog >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    tail /var/log/syslog >> ${healthchecks_destination_path}
-}
-
-function echoLsLah {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function echoLsLah $1"
-
-    echo "ls -lah $1 >> ${healthchecks_destination_path}"
-    ls -lah $1 >> ${healthchecks_destination_path}
-}
 
 ########### copy log to S3 (need to configure IAM role first)
 # aws s3 ls
