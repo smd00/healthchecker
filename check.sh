@@ -26,18 +26,18 @@ compress () {
     echo "" >> ${healthchecks_destination_path}
     echo "> function compress $1"
 
-    echo "> tar $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "  > tar $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tar $1 >> ${healthchecks_destination_path}
 } 
 
-empty () {
+emptyFile () {
     echo "" >> ${healthchecks_destination_path}
-    echo "> function empty $1"
+    echo "> function emptyFile $1"
 
     echoLsLah $1
 
-    echo "> $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    $1 >> ${healthchecks_destination_path}
+    echo "  > : > $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    : > $1 >> ${healthchecks_destination_path}
 
     echoLsLah $1
 } 
@@ -48,7 +48,7 @@ emptyLogFiles () {
 
     echoLsLah $1/*.log
 
-    echo "> find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "  > find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 
     echoLsLah $1/*.log
@@ -60,7 +60,7 @@ emptyOutputFiles () {
 
     echoLsLah $1/*.output
 
-    echo "> find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "  > find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 
     echoLsLah $1/*.output
@@ -70,7 +70,7 @@ tailLogFile () {
     echo "" >> ${healthchecks_destination_path}
     echo "> function tailLogFile $1"
 
-    echo "> tail $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "  > tail $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1 >> ${healthchecks_destination_path}
 }
 
@@ -78,7 +78,7 @@ tailLogFiles () {
     echo "" >> ${healthchecks_destination_path}
     echo "> function tailLogFiles $1"
 
-    echo "> tail $1/*.log >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "  > tail $1/*.log >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1/*.log >> ${healthchecks_destination_path}
 }
 
@@ -86,7 +86,7 @@ tailOutputFiles () {
     echo "" >> ${healthchecks_destination_path}
     echo "> function tailOutputFiles $1"
 
-    echo "> tail $1/*.output >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "  > tail $1/*.output >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1/*.output >> ${healthchecks_destination_path}
 }
 
@@ -94,7 +94,7 @@ tailAllFiles () {
     echo "" >> ${healthchecks_destination_path}
     echo "> function tailAllFiles $1"
 
-    echo "> tail $1/* >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "  > tail $1/* >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1/* >> ${healthchecks_destination_path}
 }
 
@@ -102,7 +102,7 @@ tailSyslog () {
     echo "" >> ${healthchecks_destination_path}
     echo "> function tailSyslog"
 
-    echo "> tail /var/log/syslog >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "  > tail /var/log/syslog >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail /var/log/syslog >> ${healthchecks_destination_path}
 }
 
@@ -110,13 +110,15 @@ echoLsLah () {
     echo "" >> ${healthchecks_destination_path}
     echo "> function echoLsLah $1"
 
-    echo "ls -lah $1 >> ${healthchecks_destination_path}"
+    echo "  >ls -lah $1 >> ${healthchecks_destination_path}"
     ls -lah $1 >> ${healthchecks_destination_path}
 }
 
 echoTop () {
     echo "" >> ${healthchecks_destination_path}
-    echo "> top -b -n 1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "> function echoTop"
+
+    echo "  > top -b -n 1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     top -b -n 1 >> ${healthchecks_destination_path}
 }
 
@@ -124,7 +126,7 @@ echoDf () {
     echo "" >> ${healthchecks_destination_path}
     echo "> function echoDf $1"
 
-    echo "> df -h . $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "  > df -h . $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     df -h . $1 >> ${healthchecks_destination_path}
 }
 
@@ -142,7 +144,6 @@ echoDf ${SMDHC_CLIENT_LOG_FOLDER_PATH}
 tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH}
 
 TAR_ARGS="--exclude=${archive_destination_path} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH}"
-EMPTY_ARGS=": > ${SMDHC_CLIENT_LOG_FILE_PATH}"
 
 if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
     echo "" >> ${healthchecks_destination_path}
@@ -156,7 +157,7 @@ if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
     tailSyslog
 
     compress ${TAR_ARGS}
-    empty ${EMPTY_ARGS}
+    emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH}
 
 elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     echo "" >> ${healthchecks_destination_path}
@@ -174,7 +175,7 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     tailSyslog
 
     compress ${TAR_ARGS}
-    empty ${EMPTY_ARGS}
+    emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH}
 
 elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     # echo "> pm2 prettylist: " >> ${healthchecks_destination_path}
@@ -184,7 +185,7 @@ elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     tailAllFiles ${SMDHC_CLIENT_LOG_FILE_PATH_2}
 
     compress ${TAR_ARGS}
-    # empty ${EMPTY_ARGS}
+    # empty ${SMDHC_CLIENT_LOG_FILE_PATH}
 
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     tailOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
