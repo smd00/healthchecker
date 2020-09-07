@@ -61,6 +61,15 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     echo "> top -b -n 10 | grep bitcoind" >> ${healthchecks_destination_path}
     top -b -n 10 | grep bitcoind >> ${healthchecks_destination_path}
     echo "" >> ${healthchecks_destination_path}
+elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
+    echo "" >> ${healthchecks_destination_path}
+    echo "> pm2 ls: " >> ${healthchecks_destination_path}
+    pm2 ls >> ${healthchecks_destination_path}
+    echo "" >> ${healthchecks_destination_path}
+
+    echo "> tail" ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}
+    tail ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}
+    echo "" >> ${healthchecks_destination_path}
 fi
 
 echo "" >> ${healthchecks_destination_path}
