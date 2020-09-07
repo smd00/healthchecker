@@ -93,6 +93,7 @@ elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     echo "> find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output -exec sh -c '>"{}"' \;" >> ${healthchecks_destination_path}
     find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output -exec sh -c '>"{}"' \;
 
+    echo "" >> ${healthchecks_destination_path}
     echo "> find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \;" >> ${healthchecks_destination_path}
     find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \;
 
