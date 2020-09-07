@@ -35,7 +35,7 @@ echo "> tail ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" 
 tail ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}
 
 TAR_ARGS="--exclude=${archive_destination_path} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH}"
-EMPTY_LOG=": > ${SMDHC_CLIENT_LOG_FILE_PATH}"
+EMPTY_ARGS=": > ${SMDHC_CLIENT_LOG_FILE_PATH}"
 
 if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
     echo "" >> ${healthchecks_destination_path}
@@ -49,6 +49,9 @@ if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
     echo "" >> ${healthchecks_destination_path}
     echo "> tail /var/log/syslog >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail /var/log/syslog >> ${healthchecks_destination_path}
+
+    compress ${TAR_ARGS}
+    empty ${EMPTY_ARGS}
 
 elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     echo "" >> ${healthchecks_destination_path}
@@ -67,6 +70,9 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     echo "> tail /var/log/syslog >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail /var/log/syslog >> ${healthchecks_destination_path}
 
+    compress ${TAR_ARGS}
+    empty ${EMPTY_ARGS}
+
 elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     # echo "> pm2 prettylist: " >> ${healthchecks_destination_path}
     # pm2 prettylist >> ${healthchecks_destination_path}
@@ -76,10 +82,15 @@ elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     echo "> tail ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}
 
+    compress ${TAR_ARGS}
+    # empty ${EMPTY_ARGS}
+
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     echo "" >> ${healthchecks_destination_path}
     echo "> tail ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output >> ${healthchecks_destination_path}
+
+    echo "" >> ${healthchecks_destination_path}
     echo "> tail ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log >> ${healthchecks_destination_path}
 
@@ -87,19 +98,30 @@ elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     # ls | while read file; do tail -n 5 $file; done >> ${healthchecks_destination_path}
     
     TAR_ARGS="--exclude=${SMDHC_OUTPUT_FOLDER_PATH} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH}"
-    EMPTY_LOG="echo 'NA'"
+    compress ${TAR_ARGS}
 
     echo "" >> ${healthchecks_destination_path}
-    echo "> find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output -exec sh -c '>"{}"' \;" >> ${healthchecks_destination_path}
-    find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output -exec sh -c '>"{}"' \;
+    echo "> find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 
     echo "" >> ${healthchecks_destination_path}
-    echo "> find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \;" >> ${healthchecks_destination_path}
-    find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \;
+    echo "> find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 
     echo "" >> ${healthchecks_destination_path}
     echo "> cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}
+elif [ "${SMDHC_CLIENT_NAME}" = "RAILS" ]; then
+    echo "" >> ${healthchecks_destination_path}
+    echo "> tail ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tail ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log >> ${healthchecks_destination_path}
+
+    TAR_ARGS="--exclude=${SMDHC_OUTPUT_FOLDER_PATH} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH}"
+    compress ${TAR_ARGS}
+
+    echo "" >> ${healthchecks_destination_path}
+    echo "> find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 fi
 
 echo "" >> ${healthchecks_destination_path}
@@ -109,13 +131,19 @@ top -b -n 1 >> ${healthchecks_destination_path}
 cat ${healthchecks_destination_path}
 
 ########### archive log and empty file
-echo "" >> ${healthchecks_destination_path}
-echo "> tar ${TAR_ARGS}" >> ${healthchecks_destination_path}
-tar ${TAR_ARGS}
+function compress {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function compress $1"
+    echo "> tar $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tar $1 >> ${healthchecks_destination_path}
+} 
 
-echo "" >> ${healthchecks_destination_path}
-echo "> ${EMPTY_LOG} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-${EMPTY_LOG} >> ${healthchecks_destination_path}
+function empty {
+    echo "" >> ${healthchecks_destination_path}
+    echo "> function empty $1"
+    echo "> ${EMPTY_ARGS} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    ${EMPTY_ARGS} >> ${healthchecks_destination_path}
+} 
 
 ########### copy log to S3 (need to configure IAM role first)
 # aws s3 ls
