@@ -70,6 +70,10 @@ elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     echo "> tail" ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}
     tail ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}
     echo "" >> ${healthchecks_destination_path}
+# elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
+    # echo "> top -b -n 10 | grep ruby" >> ${healthchecks_destination_path}
+    # top -b -n 10 | grep ruby >> ${healthchecks_destination_path}
+    # echo "" >> ${healthchecks_destination_path}
 fi
 
 echo "" >> ${healthchecks_destination_path}
