@@ -64,22 +64,28 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     top -b -n 10 | grep bitcoind >> ${healthchecks_destination_path}
     echo "" >> ${healthchecks_destination_path}
 elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
-    # echo "" >> ${healthchecks_destination_path}
+    echo "" >> ${healthchecks_destination_path}
+
     # echo "> pm2 prettylist: " >> ${healthchecks_destination_path}
     # pm2 prettylist >> ${healthchecks_destination_path}
     # echo "" >> ${healthchecks_destination_path}
 
     echo "> tail ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}"
     tail ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}
-    echo "" >> ${healthchecks_destination_path}
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
+    echo "" >> ${healthchecks_destination_path}
+
     # cd ${SMDHC_CLIENT_LOG_FOLDER_PATH}
     # ls | while read file; do tail -n 5 $file; done >> ${healthchecks_destination_path}
+    
     TAR_ARGS="--exclude=${SMDHC_OUTPUT_FOLDER_PATH} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH}"
 
     EMPTY_LOG=""
     find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.output -exec sh -c '>"{}"' \;
     find ${SMDHC_CLIENT_LOG_FOLDER_PATH}/*.log -exec sh -c '>"{}"' \;
+
+    /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}
+    echo "" >> ${healthchecks_destination_path}
 fi
 
 echo "" >> ${healthchecks_destination_path}
