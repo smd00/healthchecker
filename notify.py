@@ -66,8 +66,10 @@ Log: {}
 
 if service == "WALLETD":
     message = formatMessage.decode('ascii', 'ignore').encode('ascii')
-else:
+elif service == "TBOT":
     message = formatMessage.encode("ascii", "ignore")
+else:
+    message = formatMessage.encode('utf-8')
 
 print("smtp_server: " + smtp_server)
 # print("port: " + port)
