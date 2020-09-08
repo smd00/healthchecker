@@ -38,6 +38,14 @@ compress () {
     tar --exclude=$1 -zcvf $2 $3 >> ${healthchecks_destination_path}
 } 
 
+compress_DefaultLogFolder () {
+    echoNewLine
+    echo "> function compress_DefaultLogFolder" >> ${healthchecks_destination_path}
+    
+    echo "  > compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
+} 
+
 compress_DefaultLogFile () {
     echoNewLine
     echo "> function compress_DefaultLogFile" >> ${healthchecks_destination_path}
@@ -96,6 +104,22 @@ emptyOutputFiles () {
     echoLsLah $1/*.output
 }
 
+emptyLogFiles_DefaultLogFolder () {
+    echoNewLine
+    echo "> function emptyLogFiles_DefaultLogFolder" >> ${healthchecks_destination_path}
+
+    echo "  > emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
+}
+
+emptyOutputFiles_DefaultLogFolder () {
+    echoNewLine
+    echo "> function emptyOutputFiles_DefaultLogFolder" >> ${healthchecks_destination_path}
+
+    echo "  > emptyOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    emptyOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
+}
+
 deleteOldFiles () {
     # $1 = path
     # $2 = older than
@@ -114,8 +138,6 @@ deleteOldFiles () {
 }
 
 deleteOldLogs_SmdhcArchive () {
-    # $1 = path
-
     echoNewLine
     echo "> function deleteOldLogs_SmdhcArchive" >> ${healthchecks_destination_path}
 
@@ -160,6 +182,22 @@ tailOutputFiles () {
 
     echo "  > tail $1/*.output >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1/*.output >> ${healthchecks_destination_path}
+}
+
+tailLogFiles_DefaultLogFolder () {
+    echoNewLine
+    echo "> function tailLogFiles_DefaultLogFolder" >> ${healthchecks_destination_path}
+
+    echo "  > tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
+}
+
+tailOutputFiles_DefaultLogFolder () {
+    echoNewLine
+    echo "> function tailOutputFiles_DefaultLogFolder" >> ${healthchecks_destination_path}
+
+    echo "  > tailOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tailOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
 }
 
 tailAllFiles () {
@@ -263,17 +301,17 @@ elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     # pm2 prettylist >> ${healthchecks_destination_path}
     # echoNewLine
 
-    tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
+    tailLogFiles_DefaultLogFolder
     compress_DefaultLogFile
 
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
-    tailOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
-    tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
+    tailOutputFiles_DefaultLogFolder
+    tailLogFiles_DefaultLogFolder
     
-    compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH}
+    compress_DefaultLogFolder
 
-    emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
-    emptyOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
+    emptyLogFiles_DefaultLogFolder
+    emptyOutputFiles_DefaultLogFolder
 
     echoNewLine
     echo "> cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
