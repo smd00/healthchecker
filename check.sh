@@ -27,13 +27,23 @@ echoNewLine() {
 }
 
 compress () {
-    # $1 = path
+    # $1 = exclude
+    # $2 = destination
+    # $3 = source
 
     echoNewLine
-    echo "> function compress $1" >> ${healthchecks_destination_path}
+    echo "> function compress $1 $2 $3" >> ${healthchecks_destination_path}
+    
+    echo "  > tar --exclude=$1 -zcvf $2 $3 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tar --exclude=$1 -zcvf $2 $3 >> ${healthchecks_destination_path}
+} 
 
-    echo "  > tar $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    tar $1 >> ${healthchecks_destination_path}
+compress_DefaultLogFile () {
+    echoNewLine
+    echo "> function compress_DefaultLogFile" >> ${healthchecks_destination_path}
+    
+    echo "  > compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}
 } 
 
 emptyFile () {
@@ -48,6 +58,14 @@ emptyFile () {
     : > $1 >> ${healthchecks_destination_path}
 
     echoLsLah $1
+} 
+
+emptyFile_DefaultLogFile () {
+    echoNewLine
+    echo "> function emptyFile_DefaultLogFile" >> ${healthchecks_destination_path}
+
+    echo "  > emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}
 } 
 
 emptyLogFiles () {
@@ -78,7 +96,6 @@ emptyOutputFiles () {
     echoLsLah $1/*.output
 }
 
-work in progress
 deleteOldFiles () {
     # $1 = path
     # $2 = older than
@@ -115,6 +132,14 @@ tailLogFile () {
 
     echo "  > tail $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1 >> ${healthchecks_destination_path}
+}
+
+tailLogFile_DefaultLogFile () {
+    echoNewLine
+    echo "> function tailLogFile_DefaultLogFile" >> ${healthchecks_destination_path}
+
+    echo "  > tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}
 }
 
 tailLogFiles () {
@@ -208,36 +233,30 @@ echoSignature
 
 echoDf ${SMDHC_CLIENT_LOG_FOLDER_PATH}
 
-TAR_ARGS="--exclude=${archive_destination_path} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH}"
-
 if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
     echoNewLine
     echo "> ETH Block Number: " >> ${healthchecks_destination_path}
     ETH_URL=127.0.0.1:5011 && echo $((`curl --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST $ETH_URL | grep -oh "\w*0x\w*"`)) >> ${healthchecks_destination_path}
     
-    tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH}
+    tailLogFile_DefaultLogFile
+    compress_DefaultLogFile
+    emptyFile_DefaultLogFile
     
     tailSyslog
-
     echoTopProcessName "parity" 10
-
-    compress ${TAR_ARGS}
-    emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH}
 
 elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     echoNewLine
     echo "> BTC Block Number: " >> ${healthchecks_destination_path}
     /usr/bin/bitcoin-cli -datadir=/dmdata/ getblockcount >> ${healthchecks_destination_path}
 
-    tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH}
+    tailLogFile_DefaultLogFile
+    compress_DefaultLogFile
+    emptyFile_DefaultLogFile
     tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH_2}    
 
     tailSyslog
-
     echoTopProcessName "bitcoind" 10
-
-    compress ${TAR_ARGS}
-    emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH}
 
 elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     # echo "> pm2 prettylist: " >> ${healthchecks_destination_path}
@@ -245,15 +264,13 @@ elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     # echoNewLine
 
     tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
-
-    compress ${TAR_ARGS}
+    compress_DefaultLogFile
 
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     tailOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
     tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
     
-    TAR_ARGS="--exclude=${SMDHC_OUTPUT_FOLDER_PATH} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH}"
-    compress ${TAR_ARGS}
+    compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH}
 
     emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
     emptyOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
@@ -262,12 +279,9 @@ elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     echo "> cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}
 elif [ "${SMDHC_CLIENT_NAME}" = "RAILS" ]; then
-    tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH}
-
-    TAR_ARGS="--exclude=${SMDHC_OUTPUT_FOLDER_PATH} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH}"
-    compress ${TAR_ARGS}
-
-    emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH}
+    tailLogFile_DefaultLogFile
+    compress_DefaultLogFile
+    emptyFile_DefaultLogFile
 fi
 
 deleteOldLogs_SmdhcArchive
