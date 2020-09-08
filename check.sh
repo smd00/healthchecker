@@ -34,7 +34,8 @@ compress () {
     echoNewLine
     echo "> function compress $1 $2 $3" >> ${healthchecks_destination_path}
     
-    echo "  > tar --exclude=$1 -zcvf $2 $3 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> tar --exclude=$1 -zcvf $2 $3 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tar --exclude=$1 -zcvf $2 $3 >> ${healthchecks_destination_path}
 } 
 
@@ -42,7 +43,8 @@ compress_DefaultLogFolder () {
     echoNewLine
     echo "> function compress_DefaultLogFolder" >> ${healthchecks_destination_path}
     
-    echo "  > compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
 } 
 
@@ -50,7 +52,8 @@ compress_DefaultLogFile () {
     echoNewLine
     echo "> function compress_DefaultLogFile" >> ${healthchecks_destination_path}
     
-    echo "  > compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     compress ${SMDHC_OUTPUT_FOLDER_PATH} ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}
 } 
 
@@ -62,7 +65,8 @@ emptyFile () {
 
     echoLsLah $1
 
-    echo "  > : > $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> : > $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     : > $1 >> ${healthchecks_destination_path}
 
     echoLsLah $1
@@ -72,7 +76,8 @@ emptyFile_DefaultLogFile () {
     echoNewLine
     echo "> function emptyFile_DefaultLogFile" >> ${healthchecks_destination_path}
 
-    echo "  > emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}
 } 
 
@@ -84,7 +89,8 @@ emptyLogFiles () {
 
     echoLsLah $1
 
-    echo "  > find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 
     echoLsLah $1
@@ -98,7 +104,8 @@ emptyOutputFiles () {
 
     echoLsLah $1
 
-    echo "  > find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 
     echoLsLah $1
@@ -108,7 +115,8 @@ emptyLogFiles_DefaultLogFolder () {
     echoNewLine
     echo "> function emptyLogFiles_DefaultLogFolder" >> ${healthchecks_destination_path}
 
-    echo "  > emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
 }
 
@@ -116,7 +124,8 @@ emptyOutputFiles_DefaultLogFolder () {
     echoNewLine
     echo "> function emptyOutputFiles_DefaultLogFolder" >> ${healthchecks_destination_path}
 
-    echo "  > emptyOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> emptyOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     emptyOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
 }
 
@@ -130,7 +139,8 @@ deleteOldFiles () {
 
     echoLsLah $1
 
-    echo "  > find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \; >> ${healthchecks_destination_path}
     # find $1 -type f -mtime +30 -exec rm -f {} \;
 
@@ -142,7 +152,7 @@ deleteOldLogs_SmdhcArchive () {
     echo "> function deleteOldLogs_SmdhcArchive" >> ${healthchecks_destination_path}
 
     echoNewLine
-    echo "  > deleteOldFiles ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH} 14 '*.gz' >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echo "  >> deleteOldFiles ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH} 14 '*.gz' >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     deleteOldFiles ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH} 14 '*.gz' >> ${healthchecks_destination_path}
 }
 
@@ -152,7 +162,8 @@ tailLogFile () {
     echoNewLine
     echo "> function tailLogFile $1" >> ${healthchecks_destination_path}
 
-    echo "  > tail $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> tail $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1 >> ${healthchecks_destination_path}
 }
 
@@ -160,7 +171,8 @@ tailLogFile_DefaultLogFile () {
     echoNewLine
     echo "> function tailLogFile_DefaultLogFile" >> ${healthchecks_destination_path}
 
-    echo "  > tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH} >> ${healthchecks_destination_path}
 }
 
@@ -170,7 +182,8 @@ tailLogFiles () {
     echoNewLine
     echo "> function tailLogFiles $1" >> ${healthchecks_destination_path}
 
-    echo "  > tail $1/*.log >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> tail $1/*.log >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1/*.log >> ${healthchecks_destination_path}
 }
 
@@ -180,7 +193,8 @@ tailOutputFiles () {
     echoNewLine
     echo "> function tailOutputFiles $1" >> ${healthchecks_destination_path}
 
-    echo "  > tail $1/*.output >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> tail $1/*.output >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1/*.output >> ${healthchecks_destination_path}
 }
 
@@ -188,7 +202,8 @@ tailLogFiles_DefaultLogFolder () {
     echoNewLine
     echo "> function tailLogFiles_DefaultLogFolder" >> ${healthchecks_destination_path}
 
-    echo "  > tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
 }
 
@@ -196,7 +211,8 @@ tailOutputFiles_DefaultLogFolder () {
     echoNewLine
     echo "> function tailOutputFiles_DefaultLogFolder" >> ${healthchecks_destination_path}
 
-    echo "  > tailOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> tailOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tailOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH} >> ${healthchecks_destination_path}
 }
 
@@ -206,7 +222,8 @@ tailAllFiles () {
     echoNewLine
     echo "> function tailAllFiles $1" >> ${healthchecks_destination_path}
 
-    echo "  > tail $1/* >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> tail $1/* >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1/* >> ${healthchecks_destination_path}
 
     # cd ${SMDHC_CLIENT_LOG_FOLDER_PATH}
@@ -217,7 +234,8 @@ tailSyslog () {
     echoNewLine
     echo "> function tailSyslog" >> ${healthchecks_destination_path}
 
-    echo "  > tail /var/log/syslog >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> tail /var/log/syslog >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail /var/log/syslog >> ${healthchecks_destination_path}
 }
 
@@ -227,7 +245,8 @@ echoLsLah () {
     echoNewLine
     echo "> function echoLsLah $1" >> ${healthchecks_destination_path}
 
-    echo "  > ls -lah $1 >> ${healthchecks_destination_path}"
+    echoNewLine
+    echo "  >> ls -lah $1 >> ${healthchecks_destination_path}"
     ls -lah $1 >> ${healthchecks_destination_path}
 }
 
@@ -235,7 +254,8 @@ echoTop () {
     echoNewLine
     echo "> function echoTop" >> ${healthchecks_destination_path}
 
-    echo "  > top -b -n 1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> top -b -n 1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     top -b -n 1 >> ${healthchecks_destination_path}
 }
 
@@ -246,7 +266,8 @@ echoTopProcessName() {
     echoNewLine
     echo "> function echoTopProcessName $1 $2" >> ${healthchecks_destination_path}
 
-    echo "  > top -b -n $2 | grep $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> top -b -n $2 | grep $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     top -b -n $2 | grep $1 >> ${healthchecks_destination_path}
 }
 
@@ -256,7 +277,8 @@ echoDf () {
     echoNewLine
     echo "> function echoDf $1" >> ${healthchecks_destination_path}
 
-    echo "  > df -h . $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    echoNewLine
+    echo "  >> df -h . $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     df -h . $1 >> ${healthchecks_destination_path}
 }
 
