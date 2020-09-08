@@ -56,7 +56,7 @@ Subject: {}
 To: {}
 From: {}
 
-System status summary:
+Please see system status summary below.
 
 Date: {}
 Hostname: {}

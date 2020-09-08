@@ -22,17 +22,25 @@ touch ${healthchecks_destination_path}
 touch ${archive_destination_path}
 
 ########### functions
-compress () {
+echoNewLine() {
     echo "" >> ${healthchecks_destination_path}
-    echo "> function compress $1"
+}
+
+compress () {
+    # $1 = path
+
+    echoNewLine
+    echo "> function compress $1" >> ${healthchecks_destination_path}
 
     echo "  > tar $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tar $1 >> ${healthchecks_destination_path}
 } 
 
 emptyFile () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function emptyFile $1"
+    # $1 = path
+
+    echoNewLine
+    echo "> function emptyFile $1" >> ${healthchecks_destination_path}
 
     echoLsLah $1
 
@@ -43,8 +51,10 @@ emptyFile () {
 } 
 
 emptyLogFiles () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function emptyLogFiles $1"
+    # $1 = path
+
+    echoNewLine
+    echo "> function emptyLogFiles $1" >> ${healthchecks_destination_path}
 
     echoLsLah $1/*.log
 
@@ -55,8 +65,10 @@ emptyLogFiles () {
 }
 
 emptyOutputFiles () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function emptyOutputFiles $1"
+    # $1 = path
+
+    echoNewLine
+    echo "> function emptyOutputFiles $1" >> ${healthchecks_destination_path}
 
     echoLsLah $1/*.output
 
@@ -66,72 +78,127 @@ emptyOutputFiles () {
     echoLsLah $1/*.output
 }
 
+work in progress
+deleteOldFiles () {
+    # $1 = path
+    # $2 = older than
+    # $3 = file name
+
+    echoNewLine
+    echo "> function deleteOldFiles $1 $2 $3" >> ${healthchecks_destination_path}
+
+    echoLsLah $1
+
+    echo "  > find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \; >> ${healthchecks_destination_path}
+    # find $1 -type f -mtime +30 -exec rm -f {} \;
+
+    echoLsLah $1
+}
+
+deleteOldLogs_SmdhcArchive () {
+    # $1 = path
+
+    echoNewLine
+    echo "> function deleteOldLogs_SmdhcArchive" >> ${healthchecks_destination_path}
+
+    echoNewLine
+    echo "  > deleteOldFiles ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH} 14 '*.gz' >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    deleteOldFiles ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH} 14 '*.gz' >> ${healthchecks_destination_path}
+}
+
 tailLogFile () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function tailLogFile $1"
+    # $1 = path
+
+    echoNewLine
+    echo "> function tailLogFile $1" >> ${healthchecks_destination_path}
 
     echo "  > tail $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1 >> ${healthchecks_destination_path}
 }
 
 tailLogFiles () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function tailLogFiles $1"
+    # $1 = path
+
+    echoNewLine
+    echo "> function tailLogFiles $1" >> ${healthchecks_destination_path}
 
     echo "  > tail $1/*.log >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1/*.log >> ${healthchecks_destination_path}
 }
 
 tailOutputFiles () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function tailOutputFiles $1"
+    # $1 = path
+
+    echoNewLine
+    echo "> function tailOutputFiles $1" >> ${healthchecks_destination_path}
 
     echo "  > tail $1/*.output >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1/*.output >> ${healthchecks_destination_path}
 }
 
 tailAllFiles () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function tailAllFiles $1"
+    # $1 = path
+    
+    echoNewLine
+    echo "> function tailAllFiles $1" >> ${healthchecks_destination_path}
 
     echo "  > tail $1/* >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail $1/* >> ${healthchecks_destination_path}
+
+    # cd ${SMDHC_CLIENT_LOG_FOLDER_PATH}
+    # ls | while read file; do tail -n 5 $file; done >> ${healthchecks_destination_path}
 }
 
 tailSyslog () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function tailSyslog"
+    echoNewLine
+    echo "> function tailSyslog" >> ${healthchecks_destination_path}
 
     echo "  > tail /var/log/syslog >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail /var/log/syslog >> ${healthchecks_destination_path}
 }
 
 echoLsLah () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function echoLsLah $1"
+    # $1 = path
 
-    echo "  >ls -lah $1 >> ${healthchecks_destination_path}"
+    echoNewLine
+    echo "> function echoLsLah $1" >> ${healthchecks_destination_path}
+
+    echo "  > ls -lah $1 >> ${healthchecks_destination_path}"
     ls -lah $1 >> ${healthchecks_destination_path}
 }
 
 echoTop () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function echoTop"
+    echoNewLine
+    echo "> function echoTop" >> ${healthchecks_destination_path}
 
     echo "  > top -b -n 1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     top -b -n 1 >> ${healthchecks_destination_path}
 }
 
+echoTopProcessName() {
+    # $1 = process name 
+    # $2 = n iterations
+
+    echoNewLine
+    echo "> function echoTopProcessName $1 $2" >> ${healthchecks_destination_path}
+
+    echo "  > top -b -n $2 | grep $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    top -b -n $2 | grep $1 >> ${healthchecks_destination_path}
+}
+
 echoDf () {
-    echo "" >> ${healthchecks_destination_path}
-    echo "> function echoDf $1"
+    # $1 = path
+
+    echoNewLine
+    echo "> function echoDf $1" >> ${healthchecks_destination_path}
 
     echo "  > df -h . $1 >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     df -h . $1 >> ${healthchecks_destination_path}
 }
 
 echoSignature () {
-    echo "" >> ${healthchecks_destination_path}
+    echoNewLine
     echo "############################################" >> ${healthchecks_destination_path}
     echo ${signature} >> ${healthchecks_destination_path}
 }
@@ -146,13 +213,11 @@ tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH}
 TAR_ARGS="--exclude=${archive_destination_path} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH}"
 
 if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
-    echo "" >> ${healthchecks_destination_path}
+    echoNewLine
     echo "> ETH Block Number: " >> ${healthchecks_destination_path}
     ETH_URL=127.0.0.1:5011 && echo $((`curl --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST $ETH_URL | grep -oh "\w*0x\w*"`)) >> ${healthchecks_destination_path}
     
-    echo "" >> ${healthchecks_destination_path}
-    echo "> top -b -n 10 | grep parity >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    top -b -n 10 | grep parity >> ${healthchecks_destination_path}
+    echoTopProcessName "parity" 10
     
     tailSyslog
 
@@ -160,17 +225,15 @@ if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
     emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH}
 
 elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
-    echo "" >> ${healthchecks_destination_path}
+    echoNewLine
     echo "> BTC Block Number: " >> ${healthchecks_destination_path}
     /usr/bin/bitcoin-cli -datadir=/dmdata/ getblockcount >> ${healthchecks_destination_path}
 
-    echo "" >> ${healthchecks_destination_path}
+    echoNewLine
     echo "> tail ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     tail ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}
 
-    echo "" >> ${healthchecks_destination_path}
-    echo "> top -b -n 10 | grep bitcoind >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    top -b -n 10 | grep bitcoind >> ${healthchecks_destination_path}
+    echoTopProcessName "bitcoind" 10
 
     tailSyslog
 
@@ -180,7 +243,7 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
 elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     # echo "> pm2 prettylist: " >> ${healthchecks_destination_path}
     # pm2 prettylist >> ${healthchecks_destination_path}
-    # echo "" >> ${healthchecks_destination_path}
+    # echoNewLine
 
     tailAllFiles ${SMDHC_CLIENT_LOG_FILE_PATH_2}
 
@@ -190,9 +253,6 @@ elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     tailOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
     tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
-
-    # cd ${SMDHC_CLIENT_LOG_FOLDER_PATH}
-    # ls | while read file; do tail -n 5 $file; done >> ${healthchecks_destination_path}
     
     TAR_ARGS="--exclude=${SMDHC_OUTPUT_FOLDER_PATH} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH}"
     compress ${TAR_ARGS}
@@ -200,7 +260,7 @@ elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
     emptyOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
 
-    echo "" >> ${healthchecks_destination_path}
+    echoNewLine
     echo "> cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}
 elif [ "${SMDHC_CLIENT_NAME}" = "RAILS" ]; then
@@ -212,6 +272,8 @@ elif [ "${SMDHC_CLIENT_NAME}" = "RAILS" ]; then
     emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
 fi
 
+deleteOldLogs_SmdhcArchive
+
 echoTop
 
 cat ${healthchecks_destination_path}
@@ -220,6 +282,6 @@ cat ${healthchecks_destination_path}
 # aws s3 ls
 
 ########### send health report email
-echo "" >> ${healthchecks_destination_path}
-echo "> python ${SMDHC_SOURCE}/${SMDHC_SOURCE_SEND_EMAIL_SCRIPT} ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-python ${SMDHC_SOURCE}/${SMDHC_SOURCE_SEND_EMAIL_SCRIPT} ${healthchecks_destination_path}
+echoNewLine
+echo "> python ${SMDHC_SOURCE}/${SMDHC_SOURCE_SEND_EMAIL_SCRIPT} ${healthchecks_destination_path} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+python ${SMDHC_SOURCE}/${SMDHC_SOURCE_SEND_EMAIL_SCRIPT} ${healthchecks_destination_path} >> ${healthchecks_destination_path}

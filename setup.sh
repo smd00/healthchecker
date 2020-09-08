@@ -27,7 +27,8 @@ echo "> SMDHC_SOURCE: " ${SMDHC_SOURCE}
 cp ${SMDHC_SOURCE}/.env.tmp ${SMDHC_SOURCE}/.env # replace with your .env file
 echo "> ls: " && ls -lah
 
-source ${SMDHC_SOURCE}/.env && source .env
+source ${SMDHC_SOURCE}/.env 
+source .env
 
 cp /etc/environment /etc/environment.smdhc
 cat ${SMDHC_SOURCE}/.env >> /etc/environment 
