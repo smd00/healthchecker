@@ -62,7 +62,7 @@ Date: {}
 Hostname: {}
 Log: {}
 
-{}""".format(subject, receiver, sender, now_string, hostname, logFilePath, logFileRead).encode('utf-8')
+{}""".format(subject, receiver, sender, now_string, hostname, logFilePath, logFileRead).encode("ascii", "ignore")
 
 print("smtp_server: " + smtp_server)
 # print("port: " + port)

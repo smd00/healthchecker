@@ -288,6 +288,15 @@ echoSignature () {
     echo ${signature} >> ${healthchecks_destination_path}
 }
 
+pm2_list () {
+    echoNewLine
+    echo "> function pm2_list" >> ${healthchecks_destination_path}
+
+    echoNewLine
+    echo "  >> pm2 list --no-color >> ${healthchecks_destination_path} " >> ${healthchecks_destination_path}
+    pm2 list --no-color >> ${healthchecks_destination_path}
+}
+
 ########### print info to healthchecks file
 echoSignature
 
@@ -319,13 +328,18 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     echoTopProcessName "bitcoind" 10
 
 elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
-    # echo "> pm2 prettylist: " >> ${healthchecks_destination_path}
-    # pm2 prettylist >> ${healthchecks_destination_path}
-    # echoNewLine
-
     tailLogFiles_DefaultLogFolder
     compress_DefaultLogFolder
     emptyLogFiles_DefaultLogFolder
+
+    pm2_list
+
+elif [ "${SMDHC_CLIENT_NAME}" = "WALLETD" ]; then
+    tailLogFiles_DefaultLogFolder
+    compress_DefaultLogFolder
+    emptyLogFiles_DefaultLogFolder
+
+    pm2_list
 
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     tailOutputFiles_DefaultLogFolder
