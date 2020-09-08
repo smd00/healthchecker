@@ -23,6 +23,10 @@ logFilePath = arg
 logFile = open(logFilePath, 'r+')
 logFileRead = logFile.read()
 
+# import io
+# with io.open(logFilePath, "r+", encoding="ascii") as log_file:
+#      logFileRead = log_file.read() 
+
 # import subprocess
 # subprocess.run(["pm2", "ls"])
 
@@ -51,7 +55,7 @@ password = os.environ.get('SMDHC_MAIL_PWD', '')
 sender = os.environ.get('SMDHC_MAIL_SENDER', '')
 receiver = os.environ.get('SMDHC_MAIL_RECEIVER', '')
 
-message = """\
+formatMessage = """\
 Subject: {}
 To: {}
 From: {}
@@ -62,7 +66,9 @@ Date: {}
 Hostname: {}
 Log: {}
 
-{}""".format(subject, receiver, sender, now_string, hostname, logFilePath, logFileRead).encode("ascii", "ignore")
+{}""".format(subject, receiver, sender, now_string, hostname, logFilePath, logFileRead)
+
+message = formatMessage.decode('ascii', 'ignore').encode('ascii')
 
 print("smtp_server: " + smtp_server)
 # print("port: " + port)
