@@ -82,12 +82,12 @@ emptyLogFiles () {
     echoNewLine
     echo "> function emptyLogFiles $1" >> ${healthchecks_destination_path}
 
-    echoLsLah $1/*.log
+    echoLsLah $1
 
     echo "  > find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 
-    echoLsLah $1/*.log
+    echoLsLah $1
 }
 
 emptyOutputFiles () {
@@ -96,12 +96,12 @@ emptyOutputFiles () {
     echoNewLine
     echo "> function emptyOutputFiles $1" >> ${healthchecks_destination_path}
 
-    echoLsLah $1/*.output
+    echoLsLah $1
 
     echo "  > find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 
-    echoLsLah $1/*.output
+    echoLsLah $1
 }
 
 emptyLogFiles_DefaultLogFolder () {
