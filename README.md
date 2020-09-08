@@ -16,8 +16,6 @@ sh ./setup.sh
 
 ## Customise cron job
 ```
-crontab -l
-nano /etc/cron.d/cron
-crontab /etc/cron.d/cron
-crontab -l
+crontab -l && nano /etc/cron.d/cron
+crontab /etc/cron.d/cron && crontab -l
 ```

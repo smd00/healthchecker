@@ -302,7 +302,8 @@ elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     # echoNewLine
 
     tailLogFiles_DefaultLogFolder
-    compress_DefaultLogFile
+    compress_DefaultLogFolder
+    emptyLogFiles_DefaultLogFolder
 
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     tailOutputFiles_DefaultLogFolder
@@ -333,5 +334,5 @@ cat ${healthchecks_destination_path}
 
 ########### send health report email
 echoNewLine
-echo "> python ${SMDHC_SOURCE}/${SMDHC_SOURCE_SEND_EMAIL_SCRIPT} ${healthchecks_destination_path} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-python ${SMDHC_SOURCE}/${SMDHC_SOURCE_SEND_EMAIL_SCRIPT} ${healthchecks_destination_path} >> ${healthchecks_destination_path}
+echo "> python ${SMDHC_SOURCE}/notify.py ${healthchecks_destination_path} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+python ${SMDHC_SOURCE}/notify.py ${healthchecks_destination_path} >> ${healthchecks_destination_path}
