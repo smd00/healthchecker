@@ -208,8 +208,6 @@ echoSignature
 
 echoDf ${SMDHC_CLIENT_LOG_FOLDER_PATH}
 
-tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH}
-
 TAR_ARGS="--exclude=${archive_destination_path} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FILE_PATH}"
 
 if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
@@ -217,9 +215,11 @@ if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
     echo "> ETH Block Number: " >> ${healthchecks_destination_path}
     ETH_URL=127.0.0.1:5011 && echo $((`curl --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST $ETH_URL | grep -oh "\w*0x\w*"`)) >> ${healthchecks_destination_path}
     
-    echoTopProcessName "parity" 10
+    tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH}
     
     tailSyslog
+
+    echoTopProcessName "parity" 10
 
     compress ${TAR_ARGS}
     emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH}
@@ -229,13 +229,12 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     echo "> BTC Block Number: " >> ${healthchecks_destination_path}
     /usr/bin/bitcoin-cli -datadir=/dmdata/ getblockcount >> ${healthchecks_destination_path}
 
-    echoNewLine
-    echo "> tail ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
-    tail ${SMDHC_CLIENT_LOG_FILE_PATH_2} >> ${healthchecks_destination_path}
-
-    echoTopProcessName "bitcoind" 10
+    tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH}
+    tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH_2}    
 
     tailSyslog
+
+    echoTopProcessName "bitcoind" 10
 
     compress ${TAR_ARGS}
     emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH}
@@ -245,10 +244,9 @@ elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     # pm2 prettylist >> ${healthchecks_destination_path}
     # echoNewLine
 
-    tailAllFiles ${SMDHC_CLIENT_LOG_FILE_PATH_2}
+    tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
 
     compress ${TAR_ARGS}
-    # empty ${SMDHC_CLIENT_LOG_FILE_PATH}
 
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     tailOutputFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
@@ -264,12 +262,12 @@ elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     echo "> cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}
 elif [ "${SMDHC_CLIENT_NAME}" = "RAILS" ]; then
-    tailLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
+    tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH}
 
     TAR_ARGS="--exclude=${SMDHC_OUTPUT_FOLDER_PATH} -zcvf ${archive_destination_path} ${SMDHC_CLIENT_LOG_FOLDER_PATH}"
     compress ${TAR_ARGS}
 
-    emptyLogFiles ${SMDHC_CLIENT_LOG_FOLDER_PATH}
+    emptyFile ${SMDHC_CLIENT_LOG_FILE_PATH}
 fi
 
 deleteOldLogs_SmdhcArchive

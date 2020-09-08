@@ -13,3 +13,11 @@ git clone https://github.com/smd00/healthchecker.git && mv -f healthchecker ${HO
 # customise .env.tmp and cron.tmp
 sh ./setup.sh
 ```
+
+## Customise cron job
+```
+crontab -l
+nano /etc/cron.d/cron
+crontab /etc/cron.d/cron
+crontab -l
+```
