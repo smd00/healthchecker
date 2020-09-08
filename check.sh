@@ -131,7 +131,7 @@ emptyOutputFiles_DefaultLogFolder () {
 
 deleteOldFiles () {
     # $1 = path
-    # $2 = older than
+    # $2 = older than (days)
     # $3 = file name
 
     echoNewLine
@@ -154,6 +154,15 @@ deleteOldLogs_SmdhcArchive () {
     echoNewLine
     echo "  >> deleteOldFiles ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH} 14 '*.gz' >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
     deleteOldFiles ${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH} 14 '*.gz' >> ${healthchecks_destination_path}
+}
+
+deleteOldLogs_SmdhcHealthchecks () {
+    echoNewLine
+    echo "> function deleteOldLogs_SmdhcHealthchecks" >> ${healthchecks_destination_path}
+
+    echoNewLine
+    echo "  >> deleteOldFiles ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH} 186 '*.log' >> ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
+    deleteOldFiles ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH} 186 '*.log' >> ${healthchecks_destination_path}
 }
 
 tailLogFile () {
@@ -360,6 +369,7 @@ elif [ "${SMDHC_CLIENT_NAME}" = "RAILS" ]; then
 fi
 
 deleteOldLogs_SmdhcArchive
+deleteOldLogs_SmdhcHealthchecks
 
 echoTop
 
