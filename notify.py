@@ -23,10 +23,6 @@ logFilePath = arg
 logFile = open(logFilePath, 'r+')
 logFileRead = logFile.read()
 
-# import io
-# with io.open(logFilePath, "r+", encoding="ascii") as log_file:
-#      logFileRead = log_file.read() 
-
 # import subprocess
 # subprocess.run(["pm2", "ls"])
 
