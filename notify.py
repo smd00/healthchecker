@@ -64,7 +64,10 @@ Log: {}
 
 {}""".format(subject, receiver, sender, now_string, hostname, logFilePath, logFileRead)
 
-message = formatMessage.decode('ascii', 'ignore').encode('ascii')
+if service == "WALLETD":
+    message = formatMessage.decode('ascii', 'ignore').encode('ascii')
+else:
+    message = formatMessage.encode("ascii", "ignore")
 
 print("smtp_server: " + smtp_server)
 # print("port: " + port)
