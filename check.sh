@@ -3,6 +3,7 @@
 ########### vars (see .env file)
 echo "" && echo "############################################" 
 SMDHC_SOURCE=$1
+ignoreAlreadyRunCheck=$2
 echo "> SMDHC_SOURCE: " ${SMDHC_SOURCE}
 
 source ${SMDHC_SOURCE}/.env 
@@ -30,11 +31,15 @@ checkAlreadyRun() {
     echoNewLine
     echo "> function checkAlreadyRun" >> ${healthchecks_destination_path}
 
-    file_exist_check="find . -cmin -60 -type f -print"
+    earlierThanMins=60
+    fileExistsCheck="find . -cmin -$earlierThanMins -type f -print"
 
-        if $file_exist_check; then
-            echo "Healthcheck already run in the last hour."
-            exit
+        if [ ! -z "$ignoreAlreadyRunCheck" ]; then
+            echo "Ignoring fileExistsCheck ($fileExistsCheck)"  >> ${healthchecks_destination_path}
+            return 0
+        elif $fileExistsCheck; then
+            echo "Healthcheck already run in the last $earlierThanMins minutes."
+            exit 1
         fi
         echo "Ready to run Healthcheck..."
 }
