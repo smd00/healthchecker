@@ -22,5 +22,5 @@ sudo crontab /etc/cron.d/cron && sudo crontab -l
 
 ### Run once:
 ```
-sh ./check.sh ${HOME}/smdhc
+sh ./check.sh ${HOME}/smdhc ignoreAlreadyRunCheck
 ```
