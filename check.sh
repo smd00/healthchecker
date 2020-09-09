@@ -32,16 +32,27 @@ checkAlreadyRun() {
     echo "> function checkAlreadyRun" >> ${healthchecks_destination_path}
 
     earlierThanMins=60
-    fileExistsCheck="find . -cmin -$earlierThanMins -type f -print"
+    fileExistsCheck_script="find ${SMDHC_OUTPUT_HEALTHCHECKS_FOLDER_PATH} -name '*.log' -type f -cmin -$earlierThanMins -print"
+    fileExistsCheck_Count_script="${fileExistsCheck_script} | wc -l"
 
-        if [ ! -z "$ignoreAlreadyRunCheck" ]; then
-            echo "Ignoring fileExistsCheck ($fileExistsCheck)"  >> ${healthchecks_destination_path}
-            return 0
-        elif $fileExistsCheck; then
-            echo "Healthcheck already run in the last $earlierThanMins minutes."
-            exit 1
-        fi
-        echo "Ready to run Healthcheck..."
+    if [ ! -z "${ignoreAlreadyRunCheck}" ]; then
+        echo "Ignoring fileExistsCheck_script (${fileExistsCheck_script})"  >> ${healthchecks_destination_path}
+        return 0
+    fi    
+
+    echo "${fileExistsCheck_script}" >> ${healthchecks_destination_path}
+    fileExistsCheck=$(eval ${fileExistsCheck_script}) >> ${healthchecks_destination_path}
+    echo $fileExistsCheck >> ${healthchecks_destination_path}
+
+    echo "${fileExistsCheck_Count_script}" >> ${healthchecks_destination_path}
+    fileExistsCheck_Count=$(eval ${fileExistsCheck_Count_script}) >> ${healthchecks_destination_path}
+    echo $fileExistsCheck_Count >> ${healthchecks_destination_path}
+
+    if [ "${fileExistsCheck_Count}" != "1" ] ; then
+        echo "Healthcheck already run in the last ${earlierThanMins} minutes." >> ${healthchecks_destination_path}
+        exit 1
+    fi
+    echo "Ready to run Healthcheck." >> ${healthchecks_destination_path}
 }
 
 checkAlreadyRun
