@@ -26,6 +26,21 @@ echoNewLine() {
     echo "" >> ${healthchecks_destination_path}
 }
 
+checkAlreadyRun() {
+    echoNewLine
+    echo "> function checkAlreadyRun" >> ${healthchecks_destination_path}
+
+    file_exist_check="find . -cmin -60 -type f -print"
+
+        if $file_exist_check; then
+            echo "Healthcheck already run in the last hour."
+            exit
+        fi
+        echo "Ready to run Healthcheck..."
+}
+
+checkAlreadyRun
+
 compress () {
     # $1 = exclude
     # $2 = destination
