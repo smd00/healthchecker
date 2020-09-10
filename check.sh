@@ -292,8 +292,8 @@ echoDuSh () {
     # echoNewLine
     # echo "> function echoDuSh $1" >> ${healthchecks_destination_path}
 
-    echoNewLine
-    echo "  >> du -sh $1" >> ${healthchecks_destination_path}
+    # echoNewLine
+    # echo "  >> du -sh $1" >> ${healthchecks_destination_path}
     du -sh $1 >> ${healthchecks_destination_path}
 }
 
