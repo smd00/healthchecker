@@ -1,5 +1,7 @@
 #!/bin/bash --login
 
+# set -x # print all executed commands
+
 ########### vars (see .env file)
 echo "" && echo "############################################" 
 SMDHC_SOURCE=$1
