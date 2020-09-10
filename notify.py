@@ -41,15 +41,27 @@ env = os.environ.get('SMDHC_CLIENT_ENV', '')
 subject = "Health Check: " + env + " " + service + " (" + hostname + ")"
 
 '''
-Email vars
+Email vars (smdhc)
 '''
-smtp_server = os.environ.get('SMDHC_MAIL_HOST', '')
-port = os.environ.get('SMDHC_MAIL_PORT', '')
-login = os.environ.get('SMDHC_MAIL_USER', '')
-password = os.environ.get('SMDHC_MAIL_PWD', '')
+smdhc_smtp_server = os.environ.get('SMDHC_MAIL_HOST', '')
+smdhc_port = os.environ.get('SMDHC_MAIL_PORT', '')
+smdhc_login = os.environ.get('SMDHC_MAIL_USER', '')
+smdhc_password = os.environ.get('SMDHC_MAIL_PWD', '')
 
-sender = os.environ.get('SMDHC_MAIL_SENDER', '')
-receiver = os.environ.get('SMDHC_MAIL_RECEIVER', '')
+smdhc_sender = os.environ.get('SMDHC_MAIL_SENDER', '')
+smdhc_receiver = os.environ.get('SMDHC_MAIL_RECEIVER', '')
+
+'''
+Email vars (existing env)
+'''
+smtp_server = os.environ.get('SMTP_ADDRESS', smdhc_smtp_server)
+port = os.environ.get('SMTP_PORT', smdhc_port)
+login = os.environ.get('SMTP_USERNAME', smdhc_login)
+password = os.environ.get('SMTP_PASSWORD', smdhc_password)
+
+sender = os.environ.get('SYSTEM_MAIL_FROM', smdhc_sender)
+receiver = os.environ.get('SYSTEM_MAIL_TO', smdhc_receiver)
+
 
 formatMessage = """\
 Subject: {}
