@@ -124,7 +124,7 @@ emptyLogFiles () {
 
     echoDuSh $1
 
-    echoNewLine
+    # echoNewLine
     echo "  >> find $1/*.log -exec sh -c '>"{}"' \;" >> ${healthchecks_destination_path}
     find $1/*.log -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 
@@ -139,7 +139,7 @@ emptyOutputFiles () {
 
     echoDuSh $1
 
-    echoNewLine
+    # echoNewLine
     echo "  >> find $1/*.output -exec sh -c '>"{}"' \;" >> ${healthchecks_destination_path}
     find $1/*.output -exec sh -c '>"{}"' \; >> ${healthchecks_destination_path}
 
@@ -174,7 +174,7 @@ deleteOldFiles () {
 
     echoDuSh $1
 
-    echoNewLine
+    # echoNewLine
     echo "  >> find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \;" >> ${healthchecks_destination_path}
     find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \; >> ${healthchecks_destination_path}
 
@@ -333,6 +333,22 @@ echoDf () {
     df -h . $1 >> ${healthchecks_destination_path}
 }
 
+# echoEcsCluster () {
+#     echoNewLine
+#     # echo "> function echoEcsCluster" >> ${healthchecks_destination_path}
+
+#     echo "ECS Cluster: " >> ${healthchecks_destination_path}
+#     cat /etc/ecs/ecs.config | grep "ECS_CLUSTER" >> ${healthchecks_destination_path}
+# }
+
+echoHostname () {
+    echoNewLine
+    # echo "> function echoEcsCluster" >> ${healthchecks_destination_path}
+
+    # echo "Hostname: " >> ${healthchecks_destination_path}
+    cat /etc/hostname >> ${healthchecks_destination_path}
+}
+
 echoSignature () {
     echoNewLine
     echo "############################################" >> ${healthchecks_destination_path}
@@ -348,6 +364,34 @@ pm2_list () {
     pm2 list --no-color >> ${healthchecks_destination_path}
 }
 
+getBlockHeight () {
+    # $1 = url
+
+    # echoNewLine
+    # echo "> function getBlockHeight $1" >> ${healthchecks_destination_path}
+
+    echoNewLine
+    raw=$(curl -H "Accept: application/json" -X GET $url) 
+    echo "> Expected ~: " >> ${healthchecks_destination_path}
+    echo ${raw} | grep -o -P '.{0,1}height.{0,11}' >> ${healthchecks_destination_path}
+}
+
+getEthBlockHeight () {
+    # echoNewLine
+    # echo "> function getEthBlockHeight" >> ${healthchecks_destination_path}
+
+    url='https://api.blockcypher.com/v1/eth/main'
+    getBlockHeight $url
+}
+
+getBtcBlockHeight () {
+    # echoNewLine
+    # echo "> function getEthBlockHeight" >> ${healthchecks_destination_path}
+
+    url='https://chain.api.btc.com/v3/block/latest'
+    getBlockHeight $url
+}
+
 ########### print info to healthchecks file
 echoSignature
 
@@ -358,6 +402,8 @@ if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
     echo "> ETH Block Number: " >> ${healthchecks_destination_path}
     ETH_URL=127.0.0.1:5011 && echo $((`curl --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST $ETH_URL | grep -oh "\w*0x\w*"`)) >> ${healthchecks_destination_path}
     
+    getEthBlockHeight
+
     tailLogFile_DefaultLogFile
     compress_DefaultLogFile
     emptyFile_DefaultLogFile
@@ -370,6 +416,8 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     echo "> BTC Block Number: " >> ${healthchecks_destination_path}
     /usr/bin/bitcoin-cli -datadir=/dmdata/ getblockcount >> ${healthchecks_destination_path}
 
+    getBtcBlockHeight
+
     tailLogFile_DefaultLogFile
     compress_DefaultLogFile
     emptyFile_DefaultLogFile
@@ -379,6 +427,8 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     echoTopProcessName "bitcoind" 10
 
 elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
+    # echoEcsCluster
+
     tailLogFiles_DefaultLogFolder
     compress_DefaultLogFolder
     emptyLogFiles_DefaultLogFolder
@@ -393,6 +443,8 @@ elif [ "${SMDHC_CLIENT_NAME}" = "WALLETD" ]; then
     pm2_list
 
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
+    # echoEcsCluster
+
     tailOutputFiles_DefaultLogFolder
     tailLogFiles_DefaultLogFolder
     
