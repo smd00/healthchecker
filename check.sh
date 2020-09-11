@@ -317,7 +317,7 @@ echoTopProcessName() {
 
     echoNewLine
     echo "  >> top -b -n $2 | grep $1" >> ${healthchecks_destination_path}
-    top -b -n $2 | grep $1 >> ${healthchecks_destination_path}
+    top -b -n $2 | grep "$1" >> ${healthchecks_destination_path}
 }
 
 echoDf () {
