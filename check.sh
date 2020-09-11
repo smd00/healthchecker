@@ -22,7 +22,9 @@ archive_destination_path=${SMDHC_OUTPUT_ARCHIVE_FOLDER_PATH}/${datetime}-logs.ta
 
 ########### create files
 touch ${healthchecks_destination_path}
+echo "healthchecks_destination_path: ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
 touch ${archive_destination_path}
+echo "archive_destination_path: ${archive_destination_path}" >> ${healthchecks_destination_path}
 
 ########### functions
 echoNewLine() {
@@ -30,7 +32,7 @@ echoNewLine() {
 }
 
 checkAlreadyRun() {
-    # echoNewLine
+    echoNewLine
     # echo "> function checkAlreadyRun" >> ${healthchecks_destination_path}
 
     earlierThanMins=60
