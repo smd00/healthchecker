@@ -458,7 +458,7 @@ elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
 
 elif [ "${SMDHC_CLIENT_NAME}" = "WALLETD" ]; then
     pm2_list
-    
+
     tailLogFiles_DefaultLogFolder
     compress_DefaultLogFolder
     emptyLogFiles_DefaultLogFolder
@@ -486,7 +486,7 @@ fi
 deleteOldLogs_SmdhcArchive
 deleteOldLogs_SmdhcHealthchecks
 
-echoTop
+# echoTop
 
 cat ${healthchecks_destination_path}
 

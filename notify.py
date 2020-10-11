@@ -68,7 +68,8 @@ Subject: {}
 To: {}
 From: {}
 
-Please see system status summary below.
+
+System status summary:
 
 Date: {}
 Hostname: {}
