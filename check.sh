@@ -376,6 +376,24 @@ getBlockHeight () {
     echo ${raw} | grep -o -P '.{0,1}height.{0,11}' >> ${healthchecks_destination_path}
 }
 
+getCurrentEthBlockHeight () {
+    # echoNewLine
+    # echo "> function getCurrentEthBlockHeight" >> ${healthchecks_destination_path}
+
+    echoNewLine
+    echo "> ETH Block Number: " >> ${healthchecks_destination_path}
+    ETH_URL=127.0.0.1:5011 && echo $((`curl --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST $ETH_URL | grep -oh "\w*0x\w*"`)) >> ${healthchecks_destination_path}
+}
+
+getCurrentBtcBlockHeight () {
+    # echoNewLine
+    # echo "> function getCurrentBtcBlockHeight" >> ${healthchecks_destination_path}
+
+    echoNewLine
+    echo "> BTC Block Number: " >> ${healthchecks_destination_path}
+    /usr/bin/bitcoin-cli -datadir=/dmdata/ getblockcount >> ${healthchecks_destination_path}
+}
+
 getEthBlockHeight () {
     # echoNewLine
     # echo "> function getEthBlockHeight" >> ${healthchecks_destination_path}
@@ -392,30 +410,33 @@ getBtcBlockHeight () {
     getBlockHeight $url
 }
 
+getDaemonsStatus () {
+    # echoNewLine
+    # echo "> function getDaemonsStatus" >> ${healthchecks_destination_path}
+
+    echoNewLine
+    echo "> cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status" >> ${healthchecks_destination_path}
+    cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}
+}
+
 ########### print info to healthchecks file
 echoSignature
 
 echoDf ${SMDHC_CLIENT_LOG_FOLDER_PATH}
 
 if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
-    echoNewLine
-    echo "> ETH Block Number: " >> ${healthchecks_destination_path}
-    ETH_URL=127.0.0.1:5011 && echo $((`curl --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST $ETH_URL | grep -oh "\w*0x\w*"`)) >> ${healthchecks_destination_path}
-    
+    getCurrentEthBlockHeight
     getEthBlockHeight
 
     tailLogFile_DefaultLogFile
     compress_DefaultLogFile
     emptyFile_DefaultLogFile
     
-    tailSyslog
-    echoTopProcessName "parity" 10
+    # tailSyslog
+    # echoTopProcessName "parity" 10
 
 elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
-    echoNewLine
-    echo "> BTC Block Number: " >> ${healthchecks_destination_path}
-    /usr/bin/bitcoin-cli -datadir=/dmdata/ getblockcount >> ${healthchecks_destination_path}
-
+    getCurrentBtcBlockHeight
     getBtcBlockHeight
 
     tailLogFile_DefaultLogFile
@@ -423,27 +444,29 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     emptyFile_DefaultLogFile
     tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH_2}    
 
-    tailSyslog
-    echoTopProcessName "bitcoind" 10
+    # tailSyslog
+    # echoTopProcessName "bitcoind" 10
 
 elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
     # echoEcsCluster
 
+    pm2_list
+
     tailLogFiles_DefaultLogFolder
     compress_DefaultLogFolder
     emptyLogFiles_DefaultLogFolder
-
-    pm2_list
 
 elif [ "${SMDHC_CLIENT_NAME}" = "WALLETD" ]; then
+    pm2_list
+
     tailLogFiles_DefaultLogFolder
     compress_DefaultLogFolder
     emptyLogFiles_DefaultLogFolder
-
-    pm2_list
 
 elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     # echoEcsCluster
+
+    getDaemonsStatus
 
     tailOutputFiles_DefaultLogFolder
     tailLogFiles_DefaultLogFolder
@@ -453,13 +476,11 @@ elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     emptyLogFiles_DefaultLogFolder
     emptyOutputFiles_DefaultLogFolder
 
-    echoNewLine
-    echo "> cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status" >> ${healthchecks_destination_path}
-    cd /home/root/app/ && RAILS_ENV=production && /home/root/.rbenv/shims/rake daemons:status >> ${healthchecks_destination_path}
 elif [ "${SMDHC_CLIENT_NAME}" = "RAILS" ]; then
     tailLogFile_DefaultLogFile
     compress_DefaultLogFile
     emptyFile_DefaultLogFile
+
 fi
 
 deleteOldLogs_SmdhcArchive
