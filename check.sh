@@ -442,7 +442,7 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     tailLogFile_DefaultLogFile
     compress_DefaultLogFile
     emptyFile_DefaultLogFile
-    tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH_2}    
+    # tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH_2}    
 
     # tailSyslog
     # echoTopProcessName "bitcoind" 10
