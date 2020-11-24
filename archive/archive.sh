@@ -2,7 +2,6 @@
 
 # set -x # print all executed commands
 
-########### vars (see .env file)
 echo "" && echo "############################################" 
 
 datetime=$(date '+%Y%m%d-%H%M%S')
@@ -12,7 +11,8 @@ logs_path=~/logs
 archive_path=${logs_path}/archive
 archive_destination_path=${archive_path}/${datetime}-logs.tar.gz
 
-########### create files
+# chmod a+rwx ${​​logs_path}
+
 mkdir -p ${archive_path}
 touch ${archive_destination_path}
 echo "archive_destination_path: ${archive_destination_path}"
@@ -26,7 +26,7 @@ compress () {
 }
 
 compress_DefaultLogFolder () {
-    compress ${archive_path} ${archive_path} ${logs_path}
+    compress ${archive_path} ${archive_destination_path} ${logs_path}
 } 
 
 emptyFile () {
