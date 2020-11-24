@@ -13,7 +13,7 @@ archive_path=${logs_path}/archive
 archive_destination_path=${archive_path}/${datetime}-logs.tar.gz
 
 ########### create files
-mkdir ${archive_path}
+mkdir -p ${archive_path}
 touch ${archive_destination_path}
 echo "archive_destination_path: ${archive_destination_path}"
 
