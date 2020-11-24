@@ -14,6 +14,7 @@ healthchecks_destination_path=${archive_path}/${datetime}.log
 archive_destination_path=${archive_path}/${datetime}-logs.tar.gz
 
 ########### create files
+mkdir ${archive_path}
 touch ${healthchecks_destination_path}
 echo "healthchecks_destination_path: ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
 touch ${archive_destination_path}
@@ -28,13 +29,13 @@ compress () {
 }
 
 compress_DefaultLogFolder () {
-    compress ${archive_path} ${archive_path} ${logs_path} >> ${healthchecks_destination_path}
+    compress ${archive_path} ${archive_path} ${logs_path} #>> ${healthchecks_destination_path}
 } 
 
 emptyFile () {
     # $1 = path
 
-    : > $1 >> ${healthchecks_destination_path}
+    : > $1 #>> ${healthchecks_destination_path}
 } 
 
 emptyLogFiles () {
@@ -43,20 +44,17 @@ emptyLogFiles () {
     emptyFile ${logs_path}/access.log
 }
 
-deleteOldFiles () {
+deleteFiles () {
     # $1 = path
     # $2 = older than (days)
     # $3 = file name
 
-    find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \; >> ${healthchecks_destination_path}
+    find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \; #>> ${healthchecks_destination_path}
 }
 
 deleteOldLogs_Archives () {
-    # echoNewLine
-    # echo "> function deleteOldLogs_SmdhcHealthchecks" >> ${healthchecks_destination_path}
-
-    deleteOldFiles ${archive_path} 7 '*.log' >> ${healthchecks_destination_path}
-    deleteOldFiles ${archive_path} 7 '*.tar.gz' >> ${healthchecks_destination_path}
+    deleteFiles ${archive_path} 7 '*.log' #>> ${healthchecks_destination_path}
+    deleteFiles ${archive_path} 7 '*.tar.gz' #>> ${healthchecks_destination_path}
 }
 
 compress_DefaultLogFolder
