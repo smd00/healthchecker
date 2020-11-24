@@ -1,6 +1,6 @@
 #!/bin/bash --login
 
-set -x # print all executed commands
+# set -x # print all executed commands
 
 ########### vars (see .env file)
 echo "" && echo "############################################" 
@@ -10,32 +10,29 @@ signature="${datetime}-archive"
 
 logs_path=~/logs
 archive_path=${logs_path}/archive
-healthchecks_destination_path=${archive_path}/${datetime}.log
 archive_destination_path=${archive_path}/${datetime}-logs.tar.gz
 
 ########### create files
 mkdir ${archive_path}
-touch ${healthchecks_destination_path}
-echo "healthchecks_destination_path: ${healthchecks_destination_path}" >> ${healthchecks_destination_path}
 touch ${archive_destination_path}
-echo "archive_destination_path: ${archive_destination_path}" >> ${healthchecks_destination_path}
+echo "archive_destination_path: ${archive_destination_path}"
 
 compress () {
     # $1 = exclude
     # $2 = destination
     # $3 = source
 
-    tar --exclude=$1 -zcvf $2 $3 #>> ${healthchecks_destination_path}
+    tar --exclude=$1 -zcvf $2 $3
 }
 
 compress_DefaultLogFolder () {
-    compress ${archive_path} ${archive_path} ${logs_path} #>> ${healthchecks_destination_path}
+    compress ${archive_path} ${archive_path} ${logs_path}
 } 
 
 emptyFile () {
     # $1 = path
 
-    : > $1 #>> ${healthchecks_destination_path}
+    : > $1
 } 
 
 emptyLogFiles () {
@@ -49,16 +46,13 @@ deleteFiles () {
     # $2 = older than (days)
     # $3 = file name
 
-    find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \; #>> ${healthchecks_destination_path}
+    find $1 -type f -mtime +$2 -name $3 -execdir rm -- '{}' \;
 }
 
 deleteOldLogs_Archives () {
-    deleteFiles ${archive_path} 7 '*.log' #>> ${healthchecks_destination_path}
-    deleteFiles ${archive_path} 7 '*.tar.gz' #>> ${healthchecks_destination_path}
+    deleteFiles ${archive_path} 7 '*.tar.gz'
 }
 
 compress_DefaultLogFolder
 emptyLogFiles
 deleteOldLogs_Archives
-
-cat ${healthchecks_destination_path}
