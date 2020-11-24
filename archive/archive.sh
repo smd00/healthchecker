@@ -2,6 +2,9 @@
 
 # set -x # print all executed commands
 
+# cron:
+# 0 22 * * * /bin/bash -l -c 'sh archive.sh'
+
 echo "" && echo "############################################" 
 
 datetime=$(date '+%Y%m%d-%H%M%S')
