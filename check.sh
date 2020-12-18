@@ -428,7 +428,7 @@ if [ "${SMDHC_CLIENT_NAME}" = "ETH" ]; then
     getCurrentEthBlockHeight
     getEthBlockHeight
 
-    tailLogFile_DefaultLogFile
+    # tailLogFile_DefaultLogFile
     compress_DefaultLogFile
     emptyFile_DefaultLogFile
     
@@ -439,7 +439,7 @@ elif [ "${SMDHC_CLIENT_NAME}" = "BTC" ]; then
     getCurrentBtcBlockHeight
     getBtcBlockHeight
 
-    tailLogFile_DefaultLogFile
+    # tailLogFile_DefaultLogFile
     compress_DefaultLogFile
     emptyFile_DefaultLogFile
     # tailLogFile ${SMDHC_CLIENT_LOG_FILE_PATH_2}    
@@ -452,14 +452,14 @@ elif [ "${SMDHC_CLIENT_NAME}" = "TBOT" ]; then
 
     pm2_list
 
-    tailLogFiles_DefaultLogFolder
+    # tailLogFiles_DefaultLogFolder
     compress_DefaultLogFolder
     emptyLogFiles_DefaultLogFolder
 
 elif [ "${SMDHC_CLIENT_NAME}" = "WALLETD" ]; then
     pm2_list
 
-    tailLogFiles_DefaultLogFolder
+    # tailLogFiles_DefaultLogFolder
     compress_DefaultLogFolder
     emptyLogFiles_DefaultLogFolder
 
@@ -468,8 +468,8 @@ elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
 
     getDaemonsStatus
 
-    tailOutputFiles_DefaultLogFolder
-    tailLogFiles_DefaultLogFolder
+    # tailOutputFiles_DefaultLogFolder
+    # tailLogFiles_DefaultLogFolder
     
     compress_DefaultLogFolder
 
@@ -477,7 +477,7 @@ elif [ "${SMDHC_CLIENT_NAME}" = "DAEMONS" ]; then
     emptyOutputFiles_DefaultLogFolder
 
 elif [ "${SMDHC_CLIENT_NAME}" = "RAILS" ]; then
-    tailLogFile_DefaultLogFile
+    # tailLogFile_DefaultLogFile
     compress_DefaultLogFile
     emptyFile_DefaultLogFile
 
