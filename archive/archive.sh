@@ -2,7 +2,7 @@
 
 # set -x # print all executed commands
 
-# cron:
+# cron (add your absolute path to archive.sh):
 # 0 22 * * * /bin/bash -l -c 'sh archive.sh'
 
 echo "" && echo "############################################" 
